@@ -6,6 +6,9 @@ export const JWT_SECRET: string = process.env.JWT_SECRET || "";
 
 export const JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN || "1d";
 
+export const EMAIL_SMTP_SECURE: boolean =
+  Boolean(process.env.EMAIL_SMTP_SECURE) || false;
+
 export const EMAIL_SMTP_PASS: string = process.env.EMAIL_SMTP_PASS || "";
 
 export const EMAIL_SMTP_USER: string = process.env.EMAIL_SMTP_USER || "";
