@@ -1,5 +1,11 @@
-import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import jwt, {
+  JsonWebTokenError,
+  JwtPayload,
+  SignOptions,
+  TokenExpiredError,
+} from "jsonwebtoken";
 import { JWT_EXPIRES_IN, JWT_SECRET } from "./env";
+import { AppError } from "@/exceptions/AppError";
 
 export function generateToken(
   payload: string | object | Buffer,
@@ -9,5 +15,16 @@ export function generateToken(
 }
 
 export function verifyToken<T = JwtPayload>(token: string): T {
-  return jwt.verify(token, JWT_SECRET) as T;
+  try {
+    return jwt.verify(token, JWT_SECRET) as T;
+  } catch (error) {
+    if (
+      error instanceof TokenExpiredError ||
+      error instanceof JsonWebTokenError
+    ) {
+      throw new AppError("Invalid or expired token", 401);
+    }
+
+    throw error;
+  }
 }

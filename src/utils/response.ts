@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { z, ZodError } from "zod";
+import { AppError } from "@/exceptions/AppError";
 
 export type PaginationMeta = {
   page: number;
@@ -71,6 +72,21 @@ export function errorResponse(
       },
       {
         status: 400,
+      },
+    );
+  }
+
+  if (error instanceof AppError) {
+    return NextResponse.json(
+      {
+        meta: {
+          success: false,
+          statusCode: error.statusCode,
+          message: error.message,
+        },
+      },
+      {
+        status: error.statusCode,
       },
     );
   }

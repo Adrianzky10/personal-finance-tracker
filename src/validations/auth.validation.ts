@@ -28,5 +28,17 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+export const verifyEmailSchema = z.object({
+  token: z.string().min(1, "Token is required"),
+});
+
+export const resendActivationEmailSchema = z.object({
+  email: z.string().trim().email("Invalid email address"),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
+export type ResendActivationEmailInput = z.infer<
+  typeof resendActivationEmailSchema
+>;
