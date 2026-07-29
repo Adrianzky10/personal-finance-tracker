@@ -15,3 +15,12 @@ export interface VerifyEmailResponse {
   email: string;
   isVerified: boolean;
 }
+
+export interface LoginResponse {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  token: string;
+}
