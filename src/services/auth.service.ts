@@ -22,6 +22,7 @@ import {
   RegisterResponse,
   VerifyEmailResponse,
 } from "@/types/auth";
+import { requireAuth } from "@/lib/auth";
 
 export async function register(data: RegisterInput): Promise<RegisterResponse> {
   await connectDB();
@@ -176,7 +177,6 @@ export async function login(data: LoginInput): Promise<LoginResponse> {
 
   const token = generateToken({
     sub: user._id.toString(),
-    email: user.email,
   });
 
   return {
@@ -188,7 +188,18 @@ export async function login(data: LoginInput): Promise<LoginResponse> {
     },
   };
 }
+export async function getCurrentUserProfile() {
+  const user = await requireAuth();
 
-export async function logout() {}
+  return {
+    id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+  };
+}
 
-export async function getCurrentUser() {}
+export async function logout() {
+  return {
+    message: "Logout successfully",
+  };
+}

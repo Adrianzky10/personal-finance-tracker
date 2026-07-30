@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const COOKIE_NAME = "token";
+export const COOKIE_NAME = "token";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
