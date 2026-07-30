@@ -1,5 +1,5 @@
 import { AppError } from "@/exceptions/AppError";
-import { hashPassword } from "@/lib/bcrypt";
+import { comparePassword, hashPassword } from "@/lib/bcrypt";
 import { APP_URL } from "@/lib/env";
 import { generateToken, verifyToken } from "@/lib/jwt";
 import { sendEmail } from "@/lib/mail/mailer";
@@ -7,6 +7,8 @@ import { createActivationEmailTemplate } from "@/lib/mail/templates/activation-e
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import {
+  LoginInput,
+  loginSchema,
   RegisterInput,
   registerSchema,
   ResendActivationEmailInput,
@@ -16,9 +18,11 @@ import {
 } from "@/validations/auth.validation";
 import {
   JwtPayload,
+  LoginResponse,
   RegisterResponse,
   VerifyEmailResponse,
 } from "@/types/auth";
+import { requireAuth } from "@/lib/auth";
 
 export async function register(data: RegisterInput): Promise<RegisterResponse> {
   await connectDB();
@@ -147,8 +151,55 @@ export async function resendActivationEmail(data: ResendActivationEmailInput) {
   };
 }
 
-export async function login() {}
+export async function login(data: LoginInput): Promise<LoginResponse> {
+  await connectDB();
 
-export async function logout() {}
+  const validateData = loginSchema.parse(data);
+  const { email, password } = validateData;
 
-export async function getCurrentUser() {}
+  const user = await User.findOne({
+    email,
+  }).select("+password");
+
+  if (!user) {
+    throw new AppError("Invalid email or password", 401);
+  }
+
+  const isPasswordValid = await comparePassword(password, user.password);
+
+  if (!isPasswordValid) {
+    throw new AppError("Invalid email or password", 401);
+  }
+
+  if (!user.isVerified) {
+    throw new AppError("Please verify your email before logging in", 403);
+  }
+
+  const token = generateToken({
+    sub: user._id.toString(),
+  });
+
+  return {
+    token,
+    user: {
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+    },
+  };
+}
+export async function getCurrentUserProfile() {
+  const user = await requireAuth();
+
+  return {
+    id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+  };
+}
+
+export async function logout() {
+  return {
+    message: "Logout successfully",
+  };
+}
