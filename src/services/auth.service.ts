@@ -20,6 +20,7 @@ import {
   JwtPayload,
   LoginResponse,
   RegisterResponse,
+  ResendActivationEmailResponse,
   VerifyEmailResponse,
 } from "@/types/auth";
 import { requireAuth } from "@/lib/auth";
@@ -114,7 +115,9 @@ export async function verifyEmail(
   };
 }
 
-export async function resendActivationEmail(data: ResendActivationEmailInput) {
+export async function resendActivationEmail(
+  data: ResendActivationEmailInput,
+): Promise<ResendActivationEmailResponse> {
   await connectDB();
 
   const validatedData = resendActivationEmailSchema.parse(data);

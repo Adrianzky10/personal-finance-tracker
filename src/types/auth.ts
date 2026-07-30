@@ -16,6 +16,10 @@ export interface VerifyEmailResponse {
   isVerified: boolean;
 }
 
+export interface ResendActivationEmailResponse {
+  email: string;
+}
+
 export interface LoginResponse {
   user: {
     id: string;
