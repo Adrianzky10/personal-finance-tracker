@@ -22,3 +22,6 @@ export const EMAIL_SMTP_SERVICE_NAME: string =
   process.env.EMAIL_SMTP_SERVICE_NAME || "";
 
 export const APP_URL: string = process.env.APP_URL || "http://localhost:3001";
+
+export const NEXT_PUBLIC_API_URL: string =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";

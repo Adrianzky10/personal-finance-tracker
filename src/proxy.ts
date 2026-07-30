@@ -3,7 +3,7 @@ import { getToken } from "./lib/auth";
 
 const protectedRoutes = ["/dashboard", "/transactions", "/categories"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isProtectedRoutes = protectedRoutes.some((route) => {
