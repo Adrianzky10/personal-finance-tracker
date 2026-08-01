@@ -44,13 +44,13 @@ export function useRegister() {
     reValidateMode: "onChange",
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutate: mutateRegister, isPending: isPendingRegister } = useMutation({
     mutationFn: (payload: RegisterInput) => authServices.register(payload),
 
     onSuccess: (_, payload) => {
       reset();
 
-      toast.success("Registrasi berhasil. Silakan periksa email Anda.");
+      toast.success("Registration success, check your email");
 
       const cooldownSeconds = 120;
       const storageKey = `resend_cooldown_${payload.email}`;
@@ -101,17 +101,15 @@ export function useRegister() {
 
   const handleRegister = (data: RegisterInput) => {
     clearErrors("root");
-    mutate(data);
+    mutateRegister(data);
   };
 
   return {
     register,
     errors,
     onSubmit: handleSubmit(handleRegister),
-
     visiblePassword,
     togglePasswordVisibility,
-
-    isPendingRegister: isPending,
+    isPendingRegister,
   };
 }

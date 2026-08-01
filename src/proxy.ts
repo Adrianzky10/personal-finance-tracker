@@ -1,28 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "./lib/auth";
 
-const protectedRoutes = ["/dashboard", "/transactions", "/categories"];
-
 export async function proxy(request: NextRequest) {
+  const token = await getToken();
   const { pathname } = request.nextUrl;
 
-  const isProtectedRoutes = protectedRoutes.some((route) => {
-    return pathname.startsWith(route);
-  });
+  const unauthenticatedRoutes = [
+    "/login",
+    "/register",
+    "/verify-email",
+    "/check-email",
+  ];
+  const isMatchUnauthenticated = unauthenticatedRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
 
-  if (!isProtectedRoutes) {
-    return NextResponse.next();
+  if (isMatchUnauthenticated) {
+    if (token) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
-  const token = getToken();
+  const authenticatedRoutes = ["/dashboard", "/transactions", "/categories"];
+  const isMatchAuthenticated = authenticatedRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (isMatchAuthenticated) {
+    if (!token) {
+      const url = new URL("/login", request.url);
+      url.searchParams.set("callbackUrl", encodeURI(request.url));
+      return NextResponse.redirect(url);
+    }
   }
-
-  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/transactions/:path*", "/categories/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/transactions/:path*",
+    "/categories/:path*",
+    "/verify-email/:path*",
+    "/check-email/:path*",
+    "/login",
+    "/register",
+  ],
 };
