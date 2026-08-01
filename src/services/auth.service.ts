@@ -64,11 +64,19 @@ export async function register(data: RegisterInput): Promise<RegisterResponse> {
     activationLink,
   });
 
-  await sendEmail({
-    to: email,
-    subject: "Activate Your Account",
-    html,
-  });
+  try {
+    await sendEmail({
+      to: email,
+      subject: "Activate Your Account",
+      html,
+    });
+  } catch {
+    throw new AppError(
+      "Failed to send activation email. Please try again.",
+      500,
+      "EMAIL_SEND_FAILED",
+    );
+  }
 
   return {
     id: user._id.toString(),

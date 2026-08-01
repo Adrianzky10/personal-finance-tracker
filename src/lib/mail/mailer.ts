@@ -11,6 +11,11 @@ export const transporter = nodemailer.createTransport({
   host: EMAIL_SMTP_HOST,
   port: EMAIL_SMTP_PORT,
   secure: EMAIL_SMTP_SECURE,
+
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
+
   auth: {
     user: EMAIL_SMTP_USER,
     pass: EMAIL_SMTP_PASS,

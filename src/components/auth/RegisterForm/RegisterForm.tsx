@@ -1,23 +1,46 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { useRegister } from "./useRegister";
+import { Eye, EyeOff } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+
 const RegisterForm = () => {
+  const {
+    visiblePassword,
+    togglePasswordVisibility,
+    register,
+    errors,
+    onSubmit,
+    isPendingRegister,
+  } = useRegister();
+
   return (
-    <form className="mt-8 space-y-5">
+    <form className="mt-8 space-y-5" onSubmit={onSubmit}>
       <div>
         <label
           htmlFor="name"
           className="mb-2 block text-sm font-medium text-text-primary"
         >
-          Nama Lengkap
+          Full Name
         </label>
 
-        <input
+        <Input
           id="name"
-          name="name"
           type="text"
           autoComplete="name"
-          placeholder="Masukkan nama lengkap"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-text-primary outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-4 focus:ring-brand/10"
-          required
+          placeholder="Enter your full name"
+          className="h-11"
+          aria-invalid={Boolean(errors.name)}
+          {...register("name")}
         />
+
+        {errors.name?.message && (
+          <p className="mt-2 text-sm text-destructive" role="alert">
+            {errors.name.message}
+          </p>
+        )}
       </div>
 
       <div>
@@ -28,15 +51,21 @@ const RegisterForm = () => {
           Email
         </label>
 
-        <input
+        <Input
           id="email"
-          name="email"
           type="email"
           autoComplete="email"
           placeholder="nama@email.com"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-text-primary outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-4 focus:ring-brand/10"
-          required
+          className="h-11"
+          aria-invalid={Boolean(errors.email)}
+          {...register("email")}
         />
+
+        {errors.email?.message && (
+          <p className="mt-2 text-sm text-destructive" role="alert">
+            {errors.email.message}
+          </p>
+        )}
       </div>
 
       <div>
@@ -47,42 +76,88 @@ const RegisterForm = () => {
           Password
         </label>
 
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          placeholder="Masukkan password"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-text-primary outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-4 focus:ring-brand/10"
-          required
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            type={visiblePassword.password ? "text" : "password"}
+            autoComplete="new-password"
+            placeholder="Password"
+            className="h-11 pr-12"
+            aria-invalid={Boolean(errors.password)}
+            {...register("password")}
+          />
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary"
+            onClick={() => togglePasswordVisibility("password")}
+            aria-label={
+              visiblePassword.password ? "Hide password" : "Show password"
+            }
+          >
+            {visiblePassword.password ? <EyeOff /> : <Eye />}
+          </Button>
+        </div>
+
+        {errors.password?.message && (
+          <p className="mt-2 text-sm text-destructive" role="alert">
+            {errors.password.message}
+          </p>
+        )}
       </div>
 
       <div>
         <label
-          htmlFor="password-confirmation"
+          htmlFor="confirmPassword"
           className="mb-2 block text-sm font-medium text-text-primary"
         >
-          Konfirmasi Password
+          Confirm password
         </label>
 
-        <input
-          id="password-confirmation"
-          name="password-confirmation"
-          type="password"
-          autoComplete="new-password"
-          placeholder="Masukkan password"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-text-primary outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-4 focus:ring-brand/10"
-          required
-        />
+        <div className="relative">
+          <Input
+            id="confirmPassword"
+            type={visiblePassword.confirmPassword ? "text" : "password"}
+            autoComplete="new-password"
+            placeholder="Confirm password"
+            className="h-11 pr-12"
+            aria-invalid={Boolean(errors.confirmPassword)}
+            {...register("confirmPassword")}
+          />
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary"
+            onClick={() => togglePasswordVisibility("confirmPassword")}
+            aria-label={
+              visiblePassword.confirmPassword
+                ? "Hide password"
+                : "Show password"
+            }
+          >
+            {visiblePassword.confirmPassword ? <EyeOff /> : <Eye />}
+          </Button>
+        </div>
+
+        {errors.confirmPassword?.message && (
+          <p className="mt-2 text-sm text-destructive" role="alert">
+            {errors.confirmPassword.message}
+          </p>
+        )}
       </div>
 
-      <button
+      <Button
         type="submit"
-        className="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-hover focus:outline-none focus:ring-4 focus:ring-brand/20"
+        size="lg"
+        className="w-full"
+        disabled={isPendingRegister}
       >
-        Masuk
-      </button>
+        {isPendingRegister ? <Spinner /> : "Register"}
+      </Button>
     </form>
   );
 };

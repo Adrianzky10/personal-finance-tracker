@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+
 export function LoginForm() {
   return (
     <form className="mt-8 space-y-5">
@@ -41,12 +43,9 @@ export function LoginForm() {
         />
       </div>
 
-      <button
-        type="submit"
-        className="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-hover focus:outline-none focus:ring-4 focus:ring-brand/20"
-      >
-        Masuk
-      </button>
+      <Button type="submit" size="lg" className="w-full">
+        Login
+      </Button>
     </form>
   );
 }

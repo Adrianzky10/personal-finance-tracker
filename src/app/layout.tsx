@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
+import { QueryProviders } from "@/providers/QueryProviders";
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: {
@@ -16,8 +22,11 @@ type RootLayoutProps = Readonly<{
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="id">
-      <body>{children}</body>
+    <html lang="id" className={cn("font-sans", inter.variable)}>
+      <body className="bg-app-background text-text-primary antialiased">
+        <QueryProviders>{children}</QueryProviders>
+        <Toaster richColors position="top-right" duration={4000} />
+      </body>
     </html>
   );
 }

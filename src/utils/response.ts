@@ -83,6 +83,7 @@ export function errorResponse(
           success: false,
           statusCode: error.statusCode,
           message: error.message,
+          code: error.code,
         },
       },
       {
