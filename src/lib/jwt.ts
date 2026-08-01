@@ -28,3 +28,11 @@ export function verifyToken<T = JwtPayload>(token: string): T {
     throw error;
   }
 }
+
+export function decodeToken<T = JwtPayload>(token: string): T | null {
+  try {
+    return jwt.decode(token) as T;
+  } catch {
+    return null;
+  }
+}

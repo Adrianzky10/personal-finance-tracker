@@ -26,12 +26,12 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             </p>
 
             <h1 className="text-4xl font-bold leading-tight">
-              Kelola keuangan dengan lebih tenang.
+              Manage your finances with more peace of mind
             </h1>
 
             <p className="mt-5 text-base leading-7 text-blue-100">
-              Catat setiap transaksi dan pahami kebiasaan keuangan Anda dalam
-              satu tempat.
+              Track every transaction and understand your financial habits in
+              one place.
             </p>
           </div>
 

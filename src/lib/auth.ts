@@ -44,3 +44,9 @@ export async function requireAuth() {
 
   return user;
 }
+
+export async function getUserByEmail(email: string) {
+  await connectDB();
+
+  return User.findOne({ email }).select("isVerified email");
+}
