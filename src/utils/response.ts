@@ -10,6 +10,11 @@ export type PaginationMeta = {
   totalPages: number;
 };
 
+export type PaginatedResult<T> = {
+  data: T[];
+  pagination: PaginationMeta;
+};
+
 export function successResponse<T>(
   data: T,
   message = "Success",
