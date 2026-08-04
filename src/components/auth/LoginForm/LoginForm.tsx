@@ -8,7 +8,11 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { useLogin } from "./useLogin";
 
-export function LoginForm() {
+interface PropTypes {
+  callbackUrl?: string;
+}
+
+export function LoginForm({ callbackUrl }: PropTypes) {
   const {
     register,
     errors,
@@ -16,7 +20,7 @@ export function LoginForm() {
     isVisiblePassword,
     togglePasswordVisibility,
     isPendingLogin,
-  } = useLogin();
+  } = useLogin(callbackUrl);
 
   return (
     <form onSubmit={onSubmit} className="mt-8 space-y-6">
