@@ -23,7 +23,7 @@ type RootLayoutProps = Readonly<{
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="id" className={cn("font-sans", inter.variable)}>
-      <body className="bg-app-background text-text-primary antialiased">
+      <body className="bg-app-background text-text-primary min-h-screen flex flex-col antialiased">
         <QueryProviders>{children}</QueryProviders>
         <Toaster richColors position="top-right" duration={4000} />
       </body>

@@ -10,13 +10,13 @@ export default function Success() {
         <CircleCheckBig className="size-10 text-green-600" />
       </div>
 
-      <h1 className="text-3xl font-bold text-slate-900">Email verified</h1>
+      <h1 className="text-3xl font-bold text-foreground">Email verified</h1>
 
-      <p className="mt-4 text-sm leading-6 text-slate-500">
+      <p className="mt-4 text-sm leading-6 text-muted-foreground">
         Your email has been successfully verified.
       </p>
 
-      <p className="mt-2 text-sm leading-6 text-slate-500">
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
         You can now sign in to your account and start managing your personal
         finances.
       </p>

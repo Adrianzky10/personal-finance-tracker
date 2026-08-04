@@ -8,10 +8,10 @@ type AuthLayoutProps = Readonly<{
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <main className="min-h-screen bg-app-background px-4 py-6 sm:px-6 lg:p-8">
-      <div className="mx-auto grid min-h-[calc(100vh-3rem)] max-w-6xl overflow-hidden rounded-card bg-surface shadow-xl shadow-slate-900/10 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="relative hidden overflow-hidden bg-brand p-10 text-white lg:flex lg:flex-col lg:justify-between">
-          <div className="absolute -right-20 -top-20 size-72 rounded-full bg-white/10" />
-          <div className="absolute -bottom-24 -left-16 size-80 rounded-full bg-blue-400/20" />
+      <div className="mx-auto grid min-h-[calc(100vh-3rem)] max-w-6xl overflow-hidden rounded-card bg-surface shadow-xl shadow-foreground/10 lg:grid-cols-[1.1fr_0.9fr]">
+        <section className="relative hidden overflow-hidden bg-brand p-10 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
+          <div className="absolute -right-20 -top-20 size-72 rounded-full bg-primary-foreground/10" />
+          <div className="absolute -bottom-24 -left-16 size-80 rounded-full bg-primary-foreground/20" />
 
           <Link
             href="/"
