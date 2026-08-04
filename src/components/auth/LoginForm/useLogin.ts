@@ -4,7 +4,7 @@ import { LoginInput, loginSchema } from "@/validations/auth.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -14,11 +14,10 @@ const defaultValues: LoginInput = {
   password: "",
 };
 
-export function useLogin() {
+export function useLogin(callbackUrl?: string) {
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const redirectTo = callbackUrl || "/";
   const {
     register,
     handleSubmit,
@@ -41,7 +40,7 @@ export function useLogin() {
 
       toast.success("Welcome to FinTrack");
 
-      router.push(callbackUrl);
+      router.push(redirectTo);
     },
 
     onError: (error) => {

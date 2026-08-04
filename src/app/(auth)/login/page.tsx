@@ -1,7 +1,12 @@
 import LoginForm from "@/components/auth/LoginForm";
 import Link from "next/link";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+interface PropTypes {
+  searchParams: Promise<{ callbackUrl?: string }>;
+}
+export default async function LoginPage({ searchParams }: PropTypes) {
+  const params = await searchParams;
   return (
     <>
       <div className="space-y-3">
@@ -18,7 +23,7 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8">
-        <LoginForm />
+        <LoginForm callbackUrl={params.callbackUrl} />
       </div>
 
       <p className="mt-8 text-center text-sm text-muted-foreground">
