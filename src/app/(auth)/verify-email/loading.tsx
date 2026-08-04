@@ -7,11 +7,11 @@ export default function Loading() {
         <Loader2 className="size-10 animate-spin text-brand" />
       </div>
 
-      <h1 className="text-3xl font-bold text-slate-900">
+      <h1 className="text-3xl font-bold text-foreground">
         Verifying your email
       </h1>
 
-      <p className="mt-3 text-sm leading-6 text-slate-500">
+      <p className="mt-3 text-sm leading-6 text-muted-foreground">
         Please wait while we verify your account.
       </p>
     </div>

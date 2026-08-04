@@ -17,11 +17,11 @@ export default function Failed({ message, email }: FailedProps) {
         <CircleX className="size-10 text-red-600" />
       </div>
 
-      <h1 className="text-3xl font-bold text-slate-900">Verification failed</h1>
+      <h1 className="text-3xl font-bold text-foreground">Verification failed</h1>
 
-      <p className="mt-4 text-sm leading-6 text-slate-500">{message}</p>
+      <p className="mt-4 text-sm leading-6 text-muted-foreground">{message}</p>
 
-      <p className="mt-2 text-sm leading-6 text-slate-500">
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
         {isAlreadyVerified
           ? "Your account has already been activated. You can sign in now."
           : "Please request a new activation email and try again."}

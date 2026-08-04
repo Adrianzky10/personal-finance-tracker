@@ -5,6 +5,7 @@ import { QueryProviders } from "@/providers/QueryProviders";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -22,9 +23,15 @@ type RootLayoutProps = Readonly<{
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="id" className={cn("font-sans", inter.variable)}>
-      <body className="bg-app-background text-text-primary antialiased">
-        <QueryProviders>{children}</QueryProviders>
+    <html
+      lang="id"
+      className={cn("font-sans", inter.variable)}
+      suppressHydrationWarning
+    >
+      <body className="min-h-screen flex flex-col antialiased">
+        <QueryProviders>
+          <ThemeProvider>{children}</ThemeProvider>
+        </QueryProviders>
         <Toaster richColors position="top-right" duration={4000} />
       </body>
     </html>

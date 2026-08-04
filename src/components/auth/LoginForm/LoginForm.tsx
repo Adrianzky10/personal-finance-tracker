@@ -1,10 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useLogin } from "./useLogin";
-import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+
+import { useLogin } from "./useLogin";
 
 export function LoginForm() {
   const {
@@ -15,13 +17,12 @@ export function LoginForm() {
     togglePasswordVisibility,
     isPendingLogin,
   } = useLogin();
+
   return (
-    <form className="mt-8 space-y-5" onSubmit={onSubmit}>
-      <div>
-        <label
-          htmlFor="email"
-          className="mb-2 block text-sm font-medium text-text-primary"
-        >
+    <form onSubmit={onSubmit} className="mt-8 space-y-6">
+      {/* Email */}
+      <div className="space-y-2">
+        <label htmlFor="email" className="text-sm font-medium text-foreground">
           Email
         </label>
 
@@ -29,35 +30,46 @@ export function LoginForm() {
           id="email"
           type="email"
           autoComplete="email"
-          placeholder="nama@email.com"
-          className="h-11"
-          aria-invalid={Boolean(errors.email)}
+          placeholder="name@example.com"
+          aria-invalid={!!errors.email}
+          className="h-11 rounded-xl"
           {...register("email")}
         />
 
         {errors.email?.message && (
-          <p className="mt-2 text-sm text-destructive" role="alert">
+          <p role="alert" className="text-sm text-destructive">
             {errors.email.message}
           </p>
         )}
       </div>
 
-      <div>
-        <label
-          htmlFor="password"
-          className="mb-2 block text-sm font-medium text-text-primary"
-        >
-          Password
-        </label>
+      {/* Password */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label
+            htmlFor="password"
+            className="text-sm font-medium text-foreground"
+          >
+            Password
+          </label>
+
+          <Button
+            type="button"
+            variant="link"
+            className="h-auto p-0 text-xs text-primary"
+          >
+            Forgot Password?
+          </Button>
+        </div>
 
         <div className="relative">
           <Input
             id="password"
             type={isVisiblePassword ? "text" : "password"}
-            autoComplete="new-password"
-            placeholder="Password"
-            className="h-11 pr-12"
-            aria-invalid={Boolean(errors.password)}
+            autoComplete="current-password"
+            placeholder="Enter your password"
+            aria-invalid={!!errors.password}
+            className="h-11 rounded-xl pr-12"
             {...register("password")}
           />
 
@@ -65,28 +77,40 @@ export function LoginForm() {
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary"
             onClick={togglePasswordVisibility}
+            className="absolute right-1 top-1/2 h-9 w-9 -translate-y-1/2 rounded-lg text-muted-foreground hover:text-foreground"
             aria-label={isVisiblePassword ? "Hide password" : "Show password"}
           >
-            {isVisiblePassword ? <EyeOff /> : <Eye />}
+            {isVisiblePassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
           </Button>
         </div>
 
         {errors.password?.message && (
-          <p className="mt-2 text-sm text-destructive" role="alert">
+          <p role="alert" className="text-sm text-destructive">
             {errors.password.message}
           </p>
         )}
       </div>
 
+      {/* Submit */}
       <Button
         type="submit"
         size="lg"
-        className="w-full"
+        className="h-11 w-full rounded-xl font-semibold"
         disabled={isPendingLogin}
       >
-        {isPendingLogin ? <Spinner /> : "Login"}
+        {isPendingLogin ? (
+          <>
+            <Spinner className="mr-2 h-4 w-4" />
+            Signing In...
+          </>
+        ) : (
+          "Sign In"
+        )}
       </Button>
     </form>
   );
