@@ -14,21 +14,21 @@ import {
   Settings,
   Tags,
   User,
-  WalletMinimal,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 
 const Navigation = () => {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link className="flex items-center gap-3" href={"/"}>
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-            <WalletMinimal className="h-5 w-5" />
+            <Wallet className="h-5 w-5" />
           </div>
 
-          <span className="text-lg font-bold tracking-tight">FinTracker</span>
+          <span className="text-xl font-bold tracking-tight">FinTracker</span>
         </Link>
 
         {/* Navigation */}

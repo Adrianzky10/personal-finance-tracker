@@ -41,7 +41,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="#"
+                  href="/dashboard"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Dashboard
@@ -50,7 +50,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="#"
+                  href="/categories"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Categories

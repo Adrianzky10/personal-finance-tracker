@@ -4,27 +4,31 @@ import Link from "next/link";
 const RegisterPage = () => {
   return (
     <>
-      <div>
-        <p className="text-sm font-semibold text-brand">Welcome to FinTrack</p>
+      <div className="space-y-3">
+        <p className="text-sm font-semibold text-primary">
+          Welcome to FinTracker
+        </p>
 
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-text-primary sm:text-4xl">
-          Register Account
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          Create your account
         </h1>
 
-        <p className="mt-3 text-sm leading-6 text-text-secondary">
-          Make an account to get started.
+        <p className="max-w-sm text-sm leading-6 text-muted-foreground">
+          Start tracking your income and expenses in one simple place.
         </p>
       </div>
 
-      <RegisterForm />
+      <div className="mt-8">
+        <RegisterForm />
+      </div>
 
-      <p className="mt-8 text-center text-sm text-text-secondary">
+      <p className="mt-8 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-semibold text-brand transition hover:text-brand-hover"
+          className="font-semibold text-primary transition-colors hover:text-primary/80"
         >
-          Login
+          Sign In
         </Link>
       </p>
     </>

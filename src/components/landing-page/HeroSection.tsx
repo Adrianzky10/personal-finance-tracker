@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, PlayCircle, Sparkles } from "lucide-react";
+import { ArrowRight, PlayCircle, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -14,7 +14,7 @@ export default function HeroSection() {
       <div className="mx-auto flex max-w-7xl flex-col items-center px-6 pb-24 pt-20 text-center lg:pt-28">
         {/* Badge */}
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground">
-          <Sparkles className="h-4 w-4" />
+          <Wallet className="h-4 w-4" />
           Personal Finance Tracker
         </div>
 

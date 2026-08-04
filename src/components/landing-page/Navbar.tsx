@@ -26,7 +26,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
@@ -52,23 +52,29 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <ModeToggle />
-        {/* Desktop Action */}
-        <div className="hidden items-center gap-3 md:flex">
-          <Button variant="ghost">Login</Button>
+        <div className="flex items-center">
+          <ModeToggle />
+          {/* Desktop Action */}
+          <div className="hidden items-center gap-3 md:flex">
+            <Link href="/login">
+              <Button variant="ghost">Login</Button>
+            </Link>
 
-          <Button>Get Started</Button>
+            <Link href="/register">
+              <Button>Get Started</Button>
+            </Link>
+          </div>
+
+          {/* Mobile Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
-
-        {/* Mobile Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
       </div>
 
       {/* Mobile Menu */}
@@ -87,11 +93,15 @@ export default function Navbar() {
             ))}
 
             <div className="mt-4 flex flex-col gap-2 border-t border-border pt-4">
-              <Button variant="ghost" className="justify-start">
-                Login
-              </Button>
+              <Link href="/login">
+                <Button variant="ghost" className="justify-start">
+                  Login
+                </Button>
+              </Link>
 
-              <Button>Get Started</Button>
+              <Link href="/register">
+                <Button>Get Started</Button>
+              </Link>
             </div>
           </nav>
         </div>

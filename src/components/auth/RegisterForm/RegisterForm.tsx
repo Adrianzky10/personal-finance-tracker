@@ -1,10 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useRegister } from "./useRegister";
 import { Eye, EyeOff } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+
+import { useRegister } from "./useRegister";
 
 const RegisterForm = () => {
   const {
@@ -17,12 +19,10 @@ const RegisterForm = () => {
   } = useRegister();
 
   return (
-    <form className="mt-8 space-y-5" onSubmit={onSubmit}>
-      <div>
-        <label
-          htmlFor="name"
-          className="mb-2 block text-sm font-medium text-text-primary"
-        >
+    <form onSubmit={onSubmit} className="mt-8 space-y-6">
+      {/* Full Name */}
+      <div className="space-y-2">
+        <label htmlFor="name" className="text-sm font-medium text-foreground">
           Full Name
         </label>
 
@@ -30,24 +30,22 @@ const RegisterForm = () => {
           id="name"
           type="text"
           autoComplete="name"
-          placeholder="Enter your full name"
-          className="h-11"
-          aria-invalid={Boolean(errors.name)}
+          placeholder="John Doe"
+          className="h-11 rounded-xl"
+          aria-invalid={!!errors.name}
           {...register("name")}
         />
 
         {errors.name?.message && (
-          <p className="mt-2 text-sm text-destructive" role="alert">
+          <p role="alert" className="text-sm text-destructive">
             {errors.name.message}
           </p>
         )}
       </div>
 
-      <div>
-        <label
-          htmlFor="email"
-          className="mb-2 block text-sm font-medium text-text-primary"
-        >
+      {/* Email */}
+      <div className="space-y-2">
+        <label htmlFor="email" className="text-sm font-medium text-foreground">
           Email
         </label>
 
@@ -55,23 +53,24 @@ const RegisterForm = () => {
           id="email"
           type="email"
           autoComplete="email"
-          placeholder="nama@email.com"
-          className="h-11"
-          aria-invalid={Boolean(errors.email)}
+          placeholder="name@example.com"
+          className="h-11 rounded-xl"
+          aria-invalid={!!errors.email}
           {...register("email")}
         />
 
         {errors.email?.message && (
-          <p className="mt-2 text-sm text-destructive" role="alert">
+          <p role="alert" className="text-sm text-destructive">
             {errors.email.message}
           </p>
         )}
       </div>
 
-      <div>
+      {/* Password */}
+      <div className="space-y-2">
         <label
           htmlFor="password"
-          className="mb-2 block text-sm font-medium text-text-primary"
+          className="text-sm font-medium text-foreground"
         >
           Password
         </label>
@@ -81,9 +80,9 @@ const RegisterForm = () => {
             id="password"
             type={visiblePassword.password ? "text" : "password"}
             autoComplete="new-password"
-            placeholder="Password"
-            className="h-11 pr-12"
-            aria-invalid={Boolean(errors.password)}
+            placeholder="Create a password"
+            className="h-11 rounded-xl pr-12"
+            aria-invalid={!!errors.password}
             {...register("password")}
           />
 
@@ -91,29 +90,34 @@ const RegisterForm = () => {
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary"
             onClick={() => togglePasswordVisibility("password")}
+            className="absolute right-1 top-1/2 h-9 w-9 -translate-y-1/2 rounded-lg text-muted-foreground hover:text-foreground"
             aria-label={
               visiblePassword.password ? "Hide password" : "Show password"
             }
           >
-            {visiblePassword.password ? <EyeOff /> : <Eye />}
+            {visiblePassword.password ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
           </Button>
         </div>
 
         {errors.password?.message && (
-          <p className="mt-2 text-sm text-destructive" role="alert">
+          <p role="alert" className="text-sm text-destructive">
             {errors.password.message}
           </p>
         )}
       </div>
 
-      <div>
+      {/* Confirm Password */}
+      <div className="space-y-2">
         <label
           htmlFor="confirmPassword"
-          className="mb-2 block text-sm font-medium text-text-primary"
+          className="text-sm font-medium text-foreground"
         >
-          Confirm password
+          Confirm Password
         </label>
 
         <div className="relative">
@@ -121,9 +125,9 @@ const RegisterForm = () => {
             id="confirmPassword"
             type={visiblePassword.confirmPassword ? "text" : "password"}
             autoComplete="new-password"
-            placeholder="Confirm password"
-            className="h-11 pr-12"
-            aria-invalid={Boolean(errors.confirmPassword)}
+            placeholder="Confirm your password"
+            className="h-11 rounded-xl pr-12"
+            aria-invalid={!!errors.confirmPassword}
             {...register("confirmPassword")}
           />
 
@@ -131,32 +135,44 @@ const RegisterForm = () => {
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-1 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary"
             onClick={() => togglePasswordVisibility("confirmPassword")}
+            className="absolute right-1 top-1/2 h-9 w-9 -translate-y-1/2 rounded-lg text-muted-foreground hover:text-foreground"
             aria-label={
               visiblePassword.confirmPassword
                 ? "Hide password"
                 : "Show password"
             }
           >
-            {visiblePassword.confirmPassword ? <EyeOff /> : <Eye />}
+            {visiblePassword.confirmPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
           </Button>
         </div>
 
         {errors.confirmPassword?.message && (
-          <p className="mt-2 text-sm text-destructive" role="alert">
+          <p role="alert" className="text-sm text-destructive">
             {errors.confirmPassword.message}
           </p>
         )}
       </div>
 
+      {/* Submit */}
       <Button
         type="submit"
         size="lg"
-        className="w-full"
+        className="h-11 w-full rounded-xl font-semibold"
         disabled={isPendingRegister}
       >
-        {isPendingRegister ? <Spinner /> : "Register"}
+        {isPendingRegister ? (
+          <>
+            <Spinner className="mr-2 h-4 w-4" />
+            Creating Account...
+          </>
+        ) : (
+          "Create Account"
+        )}
       </Button>
     </form>
   );
