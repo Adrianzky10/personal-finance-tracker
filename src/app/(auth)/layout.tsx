@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeftIcon, Wallet, WalletMinimal } from "lucide-react";
+import { ArrowLeftIcon, Wallet } from "lucide-react";
 
 type AuthLayoutProps = Readonly<{
   children: ReactNode;

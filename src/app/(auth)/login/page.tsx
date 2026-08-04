@@ -23,7 +23,9 @@ export default async function LoginPage({ searchParams }: PropTypes) {
       </div>
 
       <div className="mt-8">
-        <LoginForm callbackUrl={params.callbackUrl} />
+        <Suspense fallback={null}>
+          <LoginForm callbackUrl={params?.callbackUrl} />
+        </Suspense>
       </div>
 
       <p className="mt-8 text-center text-sm text-muted-foreground">
