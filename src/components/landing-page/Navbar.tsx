@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Menu, Wallet, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import ModeToggle from "../shared/ModeToggle";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,6 +52,7 @@ export default function Navbar() {
           ))}
         </nav>
 
+        <ModeToggle />
         {/* Desktop Action */}
         <div className="hidden items-center gap-3 md:flex">
           <Button variant="ghost">Login</Button>
