@@ -104,38 +104,44 @@ const CategoryDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md rounded-3xl">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-lg rounded-3xl border bg-card ">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogHeader>
-            <DialogTitle>
+          <DialogHeader className="space-y-2 border-b px-6 py-5 text-left">
+            <DialogTitle className="text-xl font-bold tracking-tight">
               {isEdit ? "Edit Category" : "Create Category"}
             </DialogTitle>
 
-            <DialogDescription>
+            <DialogDescription className="text-sm leading-6 text-muted-foreground">
               {isEdit
                 ? "Update your category information."
                 : "Create a new category to organize your transactions."}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-5 py-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Category Name</label>
+          <div className="space-y-8 px-6 py-6">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold tracking-tight text-foreground">
+                Category Name
+              </label>
 
               <Input
+                className="h-12 rounded-xl"
                 disabled={isPending}
                 placeholder="e.g. Food, Salary, Investment"
                 {...register("name")}
               />
+
               {errors.name && (
-                <p className="text-sm text-destructive">
+                <p className="text-xs font-medium text-destructive">
                   {errors.name.message}
                 </p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Category Type</label>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold tracking-tight text-foreground">
+                Category Type
+              </label>
 
               <Controller
                 control={control}
@@ -148,13 +154,12 @@ const CategoryDialog = ({
                       field.onChange(value as CreateCategoryInput["type"])
                     }
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="h-12 w-full rounded-xl py-6">
                       <SelectValue placeholder="Select category type" />
                     </SelectTrigger>
 
                     <SelectContent>
                       <SelectItem value="income">Income</SelectItem>
-
                       <SelectItem value="expense">Expense</SelectItem>
                     </SelectContent>
                   </Select>
@@ -162,29 +167,37 @@ const CategoryDialog = ({
               />
 
               {errors.type && (
-                <p className="text-sm text-destructive">
+                <p className="text-xs font-medium text-destructive">
                   {errors.type.message}
                 </p>
               )}
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="gap-3 border-t px-6 py-5 sm:justify-end">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              className="h-11 rounded-xl"
             >
               Cancel
             </Button>
 
-            <Button type="submit" disabled={isPending || !isDirty}>
-              {isPending && <Spinner className="ml-2 h-4 w-4 animate-spin" />}
-              {isPending
-                ? "Submitting..."
-                : isEdit
-                  ? "Save Changes"
-                  : "Create Category"}
+            <Button
+              type="submit"
+              disabled={isPending || !isDirty}
+              className="h-11 rounded-xl"
+            >
+              <>
+                {isPending && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
+
+                {isPending
+                  ? "Submitting..."
+                  : isEdit
+                    ? "Save Changes"
+                    : "Create Category"}
+              </>
             </Button>
           </DialogFooter>
         </form>

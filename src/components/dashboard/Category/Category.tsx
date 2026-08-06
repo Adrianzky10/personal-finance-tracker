@@ -7,12 +7,17 @@ import { useCategories } from "@/hooks/category/useCategories";
 import CategoryDialog from "./CategoryDialog";
 import CategorySkeleton from "./CategorySkeleton";
 import type { Category } from "@/types/category";
+import { useDeleteCategory } from "@/hooks/category/useDeleteCategory";
+import DeleteDialog from "@/components/shared/DeleteDialog";
 
 const Category = () => {
   const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
   const { data, isLoading } = useCategories();
   const incomeCategories =
     data?.data.filter((item) => item.type === "income") ?? [];
@@ -24,6 +29,19 @@ const Category = () => {
     setSelectedCategory(category);
     setOpenCategoryDialog(true);
   };
+
+  const deleteCategory = useDeleteCategory({
+    onSuccess: () => {
+      setOpenDeleteDialog(false);
+      setSelectedCategory(null);
+    },
+  });
+
+  const handleDeleteCategory = (category: Category) => {
+    setSelectedCategory(category);
+    setOpenDeleteDialog(true);
+  };
+
   return (
     <main className="flex-1 space-y-6">
       <WelcomeBar
@@ -46,6 +64,7 @@ const Category = () => {
               color="success"
               title="Income Categories"
               categories={incomeCategories}
+              onDelete={handleDeleteCategory}
             />
 
             <CategoryCard
@@ -53,6 +72,7 @@ const Category = () => {
               color="danger"
               title="Expense Categories"
               categories={expenseCategories}
+              onDelete={handleDeleteCategory}
             />
           </div>
           <CategoryPagination />
@@ -70,6 +90,31 @@ const Category = () => {
         }}
         mode={selectedCategory ? "edit" : "create"}
         categoryData={selectedCategory ?? undefined}
+      />
+
+      <DeleteDialog
+        open={openDeleteDialog}
+        onOpenChange={(open) => {
+          setOpenDeleteDialog(open);
+
+          if (!open) {
+            setSelectedCategory(null);
+          }
+        }}
+        title="Delete Category"
+        description={
+          <>
+            Are you sure you want to delete{" "}
+            <span className="font-semibold">{selectedCategory?.name}</span>?
+            This action cannot be undone.
+          </>
+        }
+        loading={deleteCategory.isPending}
+        onDelete={() => {
+          if (!selectedCategory) return;
+
+          deleteCategory.mutate(selectedCategory.id);
+        }}
       />
     </main>
   );
