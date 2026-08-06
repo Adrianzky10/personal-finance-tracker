@@ -1,10 +1,13 @@
 "use client";
+import { useState } from "react";
 import WelcomeBar from "../WelcomeBar";
 import CategoryCard from "./CategoryCard";
 import CategoryPagination from "./CategoryPagination";
 import { useCategories } from "@/hooks/category/useCategories";
+import CategoryDialog from "./CategoryDialog";
 
 const Category = () => {
+  const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
   const { data } = useCategories();
   const incomeCategories =
     data?.data.filter((item) => item.type === "income") ?? [];
@@ -17,6 +20,7 @@ const Category = () => {
         type="categories"
         title="Manage Categories"
         description="Organize your expenses and income sources into custom categories."
+        onCreateCategory={() => setOpenCategoryDialog(true)}
       />
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -33,6 +37,12 @@ const Category = () => {
         />
       </div>
       <CategoryPagination />
+
+      <CategoryDialog
+        open={openCategoryDialog}
+        onOpenChange={setOpenCategoryDialog}
+        mode="create"
+      />
     </main>
   );
 };
