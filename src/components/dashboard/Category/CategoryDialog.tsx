@@ -27,17 +27,22 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateCategory } from "@/hooks/category/useCreateCategory";
 import { Spinner } from "@/components/ui/spinner";
+import { useEffect } from "react";
+import type { Category } from "@/types/category";
+import { useUpdateCategory } from "@/hooks/category/useUpdateCategory";
 
 type CategoryDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   mode?: "create" | "edit";
+  categoryData?: Category;
 };
 
 const CategoryDialog = ({
   open,
   onOpenChange,
   mode = "create",
+  categoryData,
 }: CategoryDialogProps) => {
   const isEdit = mode === "edit";
 
@@ -45,7 +50,7 @@ const CategoryDialog = ({
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<CreateCategoryInput>({
     resolver: zodResolver(CreateCategorySchema),
@@ -62,9 +67,40 @@ const CategoryDialog = ({
     },
   });
 
+  const updateCategory = useUpdateCategory({
+    onSuccess: () => {
+      reset();
+      onOpenChange(false);
+    },
+  });
+
   const onSubmit = (data: CreateCategoryInput) => {
+    if (isEdit && categoryData) {
+      updateCategory.mutate({
+        id: categoryData.id,
+        data,
+      });
+
+      return;
+    }
     createCategory.mutate(data);
   };
+
+  useEffect(() => {
+    if (isEdit && categoryData) {
+      reset({
+        name: categoryData.name,
+        type: categoryData.type,
+      });
+    } else {
+      reset({
+        name: "",
+        type: undefined,
+      });
+    }
+  }, [isEdit, categoryData, reset]);
+
+  const isPending = createCategory.isPending || updateCategory.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -87,6 +123,7 @@ const CategoryDialog = ({
               <label className="text-sm font-medium">Category Name</label>
 
               <Input
+                disabled={isPending}
                 placeholder="e.g. Food, Salary, Investment"
                 {...register("name")}
               />
@@ -105,6 +142,7 @@ const CategoryDialog = ({
                 name="type"
                 render={({ field }) => (
                   <Select
+                    disabled={isPending}
                     value={field.value ?? ""}
                     onValueChange={(value) =>
                       field.onChange(value as CreateCategoryInput["type"])
@@ -132,15 +170,17 @@ const CategoryDialog = ({
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
 
-            <Button type="submit" disabled={createCategory.isPending}>
-              {createCategory.isPending && (
-                <Spinner className="ml-2 h-4 w-4 animate-spin" />
-              )}
-              {createCategory.isPending
+            <Button type="submit" disabled={isPending || !isDirty}>
+              {isPending && <Spinner className="ml-2 h-4 w-4 animate-spin" />}
+              {isPending
                 ? "Submitting..."
                 : isEdit
                   ? "Save Changes"

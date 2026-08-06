@@ -5,16 +5,22 @@ import React from "react";
 
 interface PropTypes {
   category: Category;
+  onEdit: (category: Category) => void;
 }
 
 const CategoryItem = (props: PropTypes) => {
-  const { category } = props;
+  const { category, onEdit } = props;
   return (
     <div className="group flex items-center justify-between rounded-2xl border bg-background p-4 transition-all hover:shadow-sm">
       <span className="font-medium">{category.name}</span>
 
       <div className="flex items-center gap-1">
-        <Button size="icon" variant="ghost" className="cursor-pointer">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="cursor-pointer"
+          onClick={() => onEdit(category)}
+        >
           <Pencil className="h-4 w-4" />
         </Button>
 

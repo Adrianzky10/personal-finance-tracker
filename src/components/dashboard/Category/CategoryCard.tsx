@@ -7,6 +7,7 @@ interface PropTypes {
   title: string;
   color: "success" | "danger";
   categories: Category[];
+  onEdit: (category: Category) => void;
 }
 
 const colors = {
@@ -22,7 +23,7 @@ const colors = {
 };
 
 const CategoryCard = (props: PropTypes) => {
-  const { color, title, categories } = props;
+  const { color, title, categories, onEdit } = props;
   return (
     <div className="rounded-3xl border bg-card shadow-sm">
       <div className="flex items-center justify-between border-b p-6">
@@ -38,7 +39,7 @@ const CategoryCard = (props: PropTypes) => {
 
       <div className="space-y-3 p-6">
         {categories.map((category) => (
-          <CategoryItem key={category.id} category={category} />
+          <CategoryItem key={category.id} category={category} onEdit={onEdit} />
         ))}
       </div>
     </div>
