@@ -1,16 +1,7 @@
-import WelcomeBar from "@/components/dashboard/WelcomeBar";
-import React from "react";
+import Category from "@/components/dashboard/Category";
 
 const CategoryPage = () => {
-  return (
-    <main>
-      <WelcomeBar
-        type="categories"
-        title="Manage Categories"
-        description="Organize your expenses and income sources into custom categories."
-      />
-    </main>
-  );
+  return <Category />;
 };
 
 export default CategoryPage;
