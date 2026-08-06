@@ -1,3 +1,5 @@
+"use client";
+
 import ModeToggle from "@/components/shared/ModeToggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -8,17 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  LayoutDashboard,
-  LogOut,
-  Settings,
-  Tags,
-  User,
-  Wallet,
-} from "lucide-react";
+import { LogOut, Settings, User, Wallet } from "lucide-react";
 import Link from "next/link";
+import NAVIGATION_CONSTANTS from "./Navigation.constants";
+import { usePathname } from "next/navigation";
 
 const Navigation = () => {
+  const pathname = usePathname();
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-6">
@@ -33,19 +31,21 @@ const Navigation = () => {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center rounded-xl border border-border bg-muted p-1">
-          <Link href={"/dashboard"}>
-            <Button variant="default" className="rounded-lg cursor-pointer">
-              <LayoutDashboard className="mr-2 h-4 w-4" />
-              Dashboard
-            </Button>
-          </Link>
+          {NAVIGATION_CONSTANTS.map((nav) => {
+            const isActive = pathname === nav.href;
 
-          <Link href={"/categories"}>
-            <Button variant="ghost" className="rounded-lg cursor-pointer">
-              <Tags className="mr-2 h-4 w-4" />
-              Categories
-            </Button>
-          </Link>
+            return (
+              <Link key={nav.key} href={nav.href}>
+                <Button
+                  variant={isActive ? "default" : "ghost"}
+                  className="rounded-lg cursor-pointer"
+                >
+                  {nav.icon}
+                  {nav.label}
+                </Button>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Right */}

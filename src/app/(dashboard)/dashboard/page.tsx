@@ -1,16 +1,7 @@
-import WelcomeBar from "@/components/dashboard/WelcomeBar";
-import React from "react";
+import Category from "@/components/dashboard/Category";
 
 const DashboardPage = () => {
-  return (
-    <main>
-      <WelcomeBar
-        type="dashboard"
-        title="Financial Overview"
-        description="Track your daily incomes and expenses efficiently."
-      />
-    </main>
-  );
+  return <h1>Dashboard Page</h1>;
 };
 
 export default DashboardPage;

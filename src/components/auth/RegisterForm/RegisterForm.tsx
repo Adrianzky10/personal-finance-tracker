@@ -5,8 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-
-import { useRegister } from "./useRegister";
+import { useRegister } from "@/hooks/auth/useRegister";
 
 const RegisterForm = () => {
   const {

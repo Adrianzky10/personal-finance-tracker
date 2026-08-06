@@ -6,10 +6,11 @@ interface PropTypes {
   type: string;
   title: string;
   description: string;
+  onCreateCategory?: () => void;
 }
 
 const WelcomeBar = (props: PropTypes) => {
-  const { type, title, description } = props;
+  const { type, title, description, onCreateCategory } = props;
   return (
     <section className="flex flex-col justify-between gap-4 rounded-xl border border-border bg-card p-6 shadow-sm md:flex-row md:items-center">
       <div>
@@ -22,14 +23,18 @@ const WelcomeBar = (props: PropTypes) => {
 
       <div className="flex gap-3">
         {type === "categories" && (
-          <Button className="rounded-xl">
+          <Button className="rounded-xl" onClick={onCreateCategory}>
             <Plus className="h-4 w-4" />
             Category
           </Button>
         )}
         {type === "dashboard" && (
           <>
-            <Button variant="outline" className="rounded-xl">
+            <Button
+              variant="outline"
+              className="rounded-xl"
+              onClick={onCreateCategory}
+            >
               <Plus className="h-4 w-4" />
               Category
             </Button>

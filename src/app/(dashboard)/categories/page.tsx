@@ -1,7 +1,7 @@
-import React from "react";
+import Category from "@/components/dashboard/Category";
 
 const CategoryPage = () => {
-  return <div>CategoryPage</div>;
+  return <Category />;
 };
 
 export default CategoryPage;
