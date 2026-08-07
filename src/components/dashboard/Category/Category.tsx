@@ -2,7 +2,6 @@
 import { useState } from "react";
 import WelcomeBar from "../WelcomeBar";
 import CategoryCard from "./CategoryCard";
-import CategoryPagination from "./CategoryPagination";
 import { useCategories } from "@/hooks/category/useCategories";
 import CategoryDialog from "./CategoryDialog";
 import CategorySkeleton from "./CategorySkeleton";
@@ -75,7 +74,6 @@ const Category = () => {
               onDelete={handleDeleteCategory}
             />
           </div>
-          <CategoryPagination />
         </>
       )}
 
