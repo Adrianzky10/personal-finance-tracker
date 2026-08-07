@@ -7,30 +7,48 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, User, Wallet } from "lucide-react";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { LogOut, Menu, Wallet } from "lucide-react";
 import Link from "next/link";
-import NAVIGATION_CONSTANTS from "./Navigation.constants";
 import { usePathname } from "next/navigation";
+import NAVIGATION_CONSTANTS from "./Navigation.constants";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import { useLogout } from "@/hooks/auth/useLogout";
 
 const Navigation = () => {
   const pathname = usePathname();
+
+  const { data: user, isLoading: isLoadingUser } = useCurrentUser();
+  const handleLogout = useLogout();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-6">
-        {/* Logo */}
-        <Link className="flex items-center gap-3" href={"/"}>
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-            <Wallet className="h-5 w-5" />
-          </div>
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6">
+        {/* Left */}
+        <div className="flex items-center gap-3">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+              <Wallet className="h-5 w-5" />
+            </div>
 
-          <span className="text-xl font-bold tracking-tight">FinTracker</span>
-        </Link>
+            <span className="text-lg font-bold tracking-tight sm:text-xl">
+              FinTracker
+            </span>
+          </Link>
+        </div>
 
-        {/* Navigation */}
-        <nav className="hidden md:flex items-center rounded-xl border border-border bg-muted p-1">
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center rounded-xl border border-border bg-muted p-1 md:flex">
           {NAVIGATION_CONSTANTS.map((nav) => {
             const isActive = pathname === nav.href;
 
@@ -38,7 +56,7 @@ const Navigation = () => {
               <Link key={nav.key} href={nav.href}>
                 <Button
                   variant={isActive ? "default" : "ghost"}
-                  className="rounded-lg cursor-pointer"
+                  className="cursor-pointer rounded-lg"
                 >
                   {nav.icon}
                   {nav.label}
@@ -50,46 +68,134 @@ const Navigation = () => {
 
         {/* Right */}
         <div className="flex items-center gap-2">
-          <ModeToggle />
+          {/* Theme Desktop Only */}
+          <div className="hidden md:block">
+            <ModeToggle />
+          </div>
 
+          {/* Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex h-10 items-center gap-2 rounded-xl px-2"
+                className="flex h-10 w-10 items-center justify-center rounded-full px-0"
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>JD</AvatarFallback>
+                <Avatar className="h-9 w-9">
+                  <AvatarFallback className="bg-muted text-muted-foreground">
+                    {isLoadingUser
+                      ? "..."
+                      : user?.data.name
+                          ?.split(" ")
+                          .map((word: string) => word[0])
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
-
-                <div className="hidden text-left md:block">
-                  <p className="text-sm font-semibold">John Doe</p>
-                  <p className="text-xs text-muted-foreground">
-                    john@example.com
-                  </p>
-                </div>
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                Profile
-              </DropdownMenuItem>
+            {/* Sedikit diperlebar (w-72) agar teks nama dan email yang panjang tidak terpotong */}
+            <DropdownMenuContent align="end" className="w-72 p-2 rounded-xl">
+              <DropdownMenuLabel className="font-normal p-2">
+                <div className="flex items-center gap-3">
+                  {/* Avatar di dalam menu dropdown */}
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className="bg-muted text-muted-foreground">
+                      {isLoadingUser
+                        ? "..."
+                        : user?.data.name
+                            ?.split(" ")
+                            .map((word: string) => word[0])
+                            .join("")
+                            .slice(0, 2)
+                            .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
 
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
-              </DropdownMenuItem>
+                  {/* Kontainer untuk Nama dan Email */}
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {isLoadingUser ? "..." : user?.data.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {isLoadingUser ? "..." : user?.data.email}
+                    </p>
+                  </div>
+                </div>
+              </DropdownMenuLabel>
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem className="text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
+              <DropdownMenuItem
+                className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer mt-1 rounded-lg"
+                onClick={() => handleLogout.mutate()}
+                disabled={handleLogout.isPending}
+              >
+                <LogOut className="mr-3 h-5 w-5" />
+                <span className="text-base">Logout</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Mobile Hamburger (Dipindah ke Kanan) */}
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-xl">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+
+              {/* Mengubah side="left" menjadi side="right" agar serasi dengan posisi tombol */}
+              <SheetContent side="right" className="w-72 p-0">
+                <div className="flex h-full flex-col gap-8 px-6 py-8">
+                  {/* Sheet Header */}
+                  <div className="flex items-center justify-between">
+                    <Link href="/" className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+                        <Wallet className="h-5 w-5" />
+                      </div>
+
+                      <span className="text-xl font-bold tracking-tight">
+                        FinTracker
+                      </span>
+                    </Link>
+
+                    {/* Theme Mobile */}
+                    <ModeToggle />
+                  </div>
+
+                  {/* Mobile Navigation */}
+                  <nav className="flex flex-col gap-2">
+                    {NAVIGATION_CONSTANTS.map((nav) => {
+                      const isActive = pathname === nav.href;
+
+                      return (
+                        <SheetClose asChild key={nav.key}>
+                          <Link href={nav.href}>
+                            <Button
+                              variant={isActive ? "default" : "ghost"}
+                              className={`w-full justify-start rounded-xl h-12 text-base ${
+                                !isActive &&
+                                "text-muted-foreground hover:bg-muted"
+                              }`}
+                            >
+                              <span className="mr-3 flex items-center justify-center">
+                                {nav.icon}
+                              </span>
+                              {nav.label}
+                            </Button>
+                          </Link>
+                        </SheetClose>
+                      );
+                    })}
+                  </nav>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>

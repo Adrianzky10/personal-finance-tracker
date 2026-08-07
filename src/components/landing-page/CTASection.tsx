@@ -1,9 +1,14 @@
+"use client";
 import Link from "next/link";
-import { ArrowRight, PlayCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
 
 export default function CTASection() {
+  const { data: user } = useCurrentUser();
+  const isAuthenticated = !!user;
+
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-6">
@@ -32,19 +37,21 @@ export default function CTASection() {
 
           {/* Actions */}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button size="lg" asChild>
-              <Link href="/register">
-                Start Tracking
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/demo">
-                <PlayCircle className="mr-2 h-4 w-4" />
-                Live Demo
-              </Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button size="lg" asChild>
+                <Link href="/dashboard">
+                  Go to Dashboard
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            ) : (
+              <Button size="lg" asChild>
+                <Link href="/register">
+                  Start Tracking
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>
