@@ -8,26 +8,6 @@ const CategorySkeleton = () => {
         <CategoryCardSkeleton />
         <CategoryCardSkeleton />
       </div>
-
-      {/* Pagination Skeleton */}
-      <div className="flex items-center justify-between px-2 pt-2">
-        <Skeleton className="h-4 w-62.5" />
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-8 w-17.5" />
-            <Skeleton className="h-8 w-8" />
-          </div>
-          <div className="flex w-25 items-center justify-center text-sm font-medium">
-            <Skeleton className="h-4 w-20" />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Skeleton className="hidden h-8 w-8 lg:flex" />
-            <Skeleton className="h-8 w-8" />
-            <Skeleton className="h-8 w-8" />
-            <Skeleton className="hidden h-8 w-8 lg:flex" />
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
