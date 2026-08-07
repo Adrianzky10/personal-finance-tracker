@@ -66,7 +66,7 @@ export default function Footer() {
             <ul className="mt-5 space-y-3">
               <li>
                 <Link
-                  href="https://github.com"
+                  href="https://github.com/Adrianzky10"
                   target="_blank"
                   className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >

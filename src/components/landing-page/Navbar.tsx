@@ -2,26 +2,57 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, Wallet, X } from "lucide-react";
+import { LogOut, Menu, Wallet, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import ModeToggle from "../shared/ModeToggle";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { useLogout } from "@/hooks/auth/useLogout";
+import { Spinner } from "../ui/spinner";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const { data: user } = useCurrentUser();
+  const isAuthenticated = !!user;
+
+  const handleLogout = useLogout();
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+
+    return name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+  };
+
   const navItems = [
+    {
+      title: "About",
+      href: "#about",
+    },
     {
       title: "Features",
       href: "#features",
     },
     {
-      title: "Goals",
-      href: "#goals",
+      title: "Testimonials",
+      href: "#testimonials",
     },
     {
-      title: "About",
-      href: "#about",
+      title: "Pricing",
+      href: "#pricing",
     },
   ];
 
@@ -52,17 +83,79 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <ModeToggle />
           {/* Desktop Action */}
+          {/* Desktop Action */}
           <div className="hidden items-center gap-3 md:flex">
-            <Link href="/login">
-              <Button variant="ghost">Login</Button>
-            </Link>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-10 w-10 rounded-full p-0"
+                  >
+                    <Avatar className="h-9 w-9">
+                      <AvatarFallback className="bg-muted text-muted-foreground">
+                        {getInitials(user?.data.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
 
-            <Link href="/register">
-              <Button>Get Started</Button>
-            </Link>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-72 rounded-xl p-2"
+                >
+                  <DropdownMenuLabel className="p-2 font-normal">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback className="bg-muted">
+                          {getInitials(user?.data.name)}
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <div className="flex flex-col space-y-1">
+                        <p className="max-w-48 truncate text-sm font-medium">
+                          {user?.data.name}
+                        </p>
+
+                        <p className="max-w-48 truncate text-sm text-muted-foreground">
+                          {user?.data.email}
+                        </p>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
+                    onClick={() => handleLogout.mutate()}
+                    disabled={handleLogout.isPending}
+                  >
+                    {handleLogout.isPending ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        <LogOut className="mr-3 h-5 w-5" />
+                        Logout
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost">Login</Button>
+                </Link>
+
+                <Link href="/register">
+                  <Button>Get Started</Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Button */}
@@ -93,15 +186,45 @@ export default function Navbar() {
             ))}
 
             <div className="mt-4 flex flex-col gap-2 border-t border-border pt-4">
-              <Link href="/login">
-                <Button variant="ghost" className="justify-start">
-                  Login
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <div className="flex items-center gap-3 px-3 py-2">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback>
+                        {getInitials(user?.data.name)}
+                      </AvatarFallback>
+                    </Avatar>
 
-              <Link href="/register">
-                <Button>Get Started</Button>
-              </Link>
+                    <div>
+                      <p className="text-sm font-medium">{user?.data.name}</p>
+
+                      <p className="text-xs text-muted-foreground">
+                        {user?.data.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button
+                    variant="ghost"
+                    className="justify-start text-destructive py-8"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="ghost" className="justify-start">
+                      Login
+                    </Button>
+                  </Link>
+
+                  <Link href="/register">
+                    <Button>Get Started</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>
