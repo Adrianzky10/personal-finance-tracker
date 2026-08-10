@@ -28,23 +28,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateCategory } from "@/hooks/category/useCreateCategory";
 import { Spinner } from "@/components/ui/spinner";
 import { useEffect } from "react";
-import type { Category } from "@/types/category";
 import { useUpdateCategory } from "@/hooks/category/useUpdateCategory";
+import { useCategoryDialogStore } from "@/stores/useCategoryDialogStore";
 
-type CategoryDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  mode?: "create" | "edit";
-  categoryData?: Category;
-};
-
-const CategoryDialog = ({
-  open,
-  onOpenChange,
-  mode = "create",
-  categoryData,
-}: CategoryDialogProps) => {
+const CategoryDialog = () => {
+  const { open, mode, selectedCategory, closeDialog } =
+    useCategoryDialogStore();
   const isEdit = mode === "edit";
+  const categoryData = selectedCategory;
 
   const {
     register,
@@ -63,14 +54,14 @@ const CategoryDialog = ({
   const createCategory = useCreateCategory({
     onSuccess: () => {
       reset();
-      onOpenChange(false);
+      closeDialog();
     },
   });
 
   const updateCategory = useUpdateCategory({
     onSuccess: () => {
       reset();
-      onOpenChange(false);
+      closeDialog();
     },
   });
 
@@ -103,7 +94,7 @@ const CategoryDialog = ({
   const isPending = createCategory.isPending || updateCategory.isPending;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(value) => { if (!value) closeDialog(); }}>
       <DialogContent className="w-[calc(100%-2rem)] max-w-lg rounded-3xl border bg-card ">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader className="space-y-2 border-b px-6 py-5 text-left">
@@ -178,7 +169,7 @@ const CategoryDialog = ({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={closeDialog}
               className="h-11 rounded-xl"
             >
               Cancel

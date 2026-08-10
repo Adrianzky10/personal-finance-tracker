@@ -1,7 +1,7 @@
-import Category from "@/components/dashboard/Category";
+import MainDashboard from "@/components/dashboard/MainDashboard/MainDashboard";
 
 const DashboardPage = () => {
-  return <h1>Dashboard Page</h1>;
+  return <MainDashboard />;
 };
 
 export default DashboardPage;
