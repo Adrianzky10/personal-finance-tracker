@@ -1,5 +1,8 @@
-import { CategoryType } from "@/types/category";
+import { TransactionType } from "@/types/transaction";
 import { z } from "zod";
+
+// Re-use TransactionType to avoid duplicate enums with the same values.
+const CategoryType = TransactionType;
 
 export const CreateCategorySchema = z.object({
   name: z
