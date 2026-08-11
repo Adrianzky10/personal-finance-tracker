@@ -57,4 +57,4 @@ export type CreateTransactionInput = z.infer<typeof CreateTransactionSchema>;
 
 export type UpdateTransactionInput = z.infer<typeof UpdateTransactionSchema>;
 
-export type GetTransactionsInput = z.infer<typeof GetTransactionsSchema>;
+export type GetTransactionsInput = z.input<typeof GetTransactionsSchema>;

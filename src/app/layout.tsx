@@ -29,9 +29,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
     >
       <body className="min-h-screen flex flex-col antialiased">
-        <QueryProviders>
-          <ThemeProvider>{children}</ThemeProvider>
-        </QueryProviders>
+        <ThemeProvider>
+          <QueryProviders>{children}</QueryProviders>
+        </ThemeProvider>
         <Toaster richColors position="top-right" duration={4000} />
       </body>
     </html>

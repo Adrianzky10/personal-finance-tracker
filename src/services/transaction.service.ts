@@ -3,20 +3,14 @@ import { requireAuth } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import Category from "@/models/Category";
 import Transaction from "@/models/Transaction";
-import { ITransaction } from "@/types/transaction";
+import { ITransaction, PopulatedCategory } from "@/types/transaction";
 import {
   CreateTransactionInput,
   CreateTransactionSchema,
   GetTransactionsSchema,
   UpdateTransactionSchema,
 } from "@/validations/transaction.validation";
-import { QueryFilter, Types } from "mongoose";
-
-type PopulatedCategory = {
-  _id: Types.ObjectId;
-  name: string;
-  type: string;
-};
+import { QueryFilter } from "mongoose";
 
 export async function createTransaction(data: CreateTransactionInput) {
   await connectDB();

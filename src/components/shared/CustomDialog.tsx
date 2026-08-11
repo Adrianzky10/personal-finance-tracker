@@ -68,7 +68,7 @@ const CustomDialog = ({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="h-11 rounded-xl"
+              className="h-11 rounded-xl cursor-pointer"
             >
               {cancelText}
             </Button>
@@ -76,7 +76,7 @@ const CustomDialog = ({
             <Button
               type="submit"
               disabled={isPending || isSubmitDisabled}
-              className="h-11 rounded-xl"
+              className="h-11 rounded-xl cursor-pointer"
             >
               <>
                 {isPending && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
