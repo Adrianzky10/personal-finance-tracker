@@ -5,15 +5,17 @@ import TransactionChart from "./TransactionChart";
 import TransactionSummary from "./TransactionSummary";
 import TransactionTable from "./TransactionTable";
 
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
 import { useCategoryDialogStore } from "@/stores/useCategoryDialogStore";
 import CategoryDialog from "../Category/CategoryDialog";
 import useTransaction from "@/hooks/transaction/useTransaction";
+import TransactionDialog from "./TransactionDialog";
+import { useTransactionDialogStore } from "@/stores/useTransactionDialogStore";
 
 export default function Transaction() {
-  const { openCreateDialog } = useCategoryDialogStore();
-
-  const { data: user, isLoading: isLoadingUser } = useCurrentUser();
+  const { openCreateDialog: openCreateCategoryDialog } =
+    useCategoryDialogStore();
+  const { openCreateDialog: openCreateTransactionDialog } =
+    useTransactionDialogStore();
 
   const { data } = useTransaction();
 
@@ -23,13 +25,10 @@ export default function Transaction() {
     <div className="space-y-6">
       <WelcomeBar
         type="dashboard"
-        title={
-          isLoadingUser
-            ? "Welcome back, User"
-            : `Welcome back, ${user?.data.name ?? "User"}`
-        }
+        title="Financial Overview"
         description="Here's what's happening with your finances today."
-        onCreateCategory={openCreateDialog}
+        onCreateCategory={openCreateCategoryDialog}
+        onCreateTransaction={openCreateTransactionDialog}
       />
 
       <TransactionSummary totalIncome={0} totalExpense={0} balance={0} />
@@ -39,6 +38,8 @@ export default function Transaction() {
       <TransactionTable transactions={transactions} />
 
       <CategoryDialog />
+
+      <TransactionDialog />
     </div>
   );
 }

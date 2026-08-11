@@ -7,10 +7,12 @@ interface PropTypes {
   title: string;
   description: string;
   onCreateCategory?: () => void;
+  onCreateTransaction?: () => void;
 }
 
 const WelcomeBar = (props: PropTypes) => {
-  const { type, title, description, onCreateCategory } = props;
+  const { type, title, description, onCreateCategory, onCreateTransaction } =
+    props;
   return (
     <section className="flex flex-col justify-between gap-4 rounded-xl border border-border bg-card p-6 shadow-sm md:flex-row md:items-center">
       <div>
@@ -32,14 +34,17 @@ const WelcomeBar = (props: PropTypes) => {
           <>
             <Button
               variant="outline"
-              className="rounded-xl"
+              className="cursor-pointer rounded-xl"
               onClick={onCreateCategory}
             >
               <Plus className="h-4 w-4" />
               Category
             </Button>
 
-            <Button className="rounded-xl">
+            <Button
+              className="rounded-xl cursor-pointer"
+              onClick={onCreateTransaction}
+            >
               <ReceiptText className="h-4 w-4" />
               New Transaction
             </Button>

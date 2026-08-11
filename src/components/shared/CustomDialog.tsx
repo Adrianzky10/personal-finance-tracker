@@ -47,11 +47,11 @@ const CustomDialog = ({
       }}
     >
       <DialogContent
-        className="w-[calc(100%-2rem)] max-w-lg rounded-3xl border bg-card p-0 gap-0 overflow-hidden"
+        className="w-[calc(100%-2rem)] max-w-lg max-h-[90vh] overflow-hidden rounded-3xl border bg-card p-0 gap-0"
         showCloseButton={false}
       >
-        <form onSubmit={onSubmit} className="flex flex-col">
-          <DialogHeader className="space-y-2 border-b px-6 py-5 text-left">
+        <form onSubmit={onSubmit} className="flex max-h-[90vh] flex-col">
+          <DialogHeader className="shrink-0 space-y-2 border-b px-6 py-5 text-left">
             <DialogTitle className="text-xl font-bold tracking-tight">
               {title}
             </DialogTitle>
@@ -61,14 +61,16 @@ const CustomDialog = ({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-8 px-6 py-6">{children}</div>
+          <div className="flex-1 overflow-y-auto px-6 py-6">
+            <div className="space-y-8">{children}</div>
+          </div>
 
-          <DialogFooter className="m-0 gap-3 rounded-none border-t bg-transparent px-6 py-5 sm:flex-row sm:justify-end">
+          <DialogFooter className="shrink-0 m-0 gap-3 rounded-none border-t bg-transparent px-6 py-5 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="h-11 rounded-xl cursor-pointer"
+              className="h-11 cursor-pointer rounded-xl"
             >
               {cancelText}
             </Button>
@@ -76,7 +78,7 @@ const CustomDialog = ({
             <Button
               type="submit"
               disabled={isPending || isSubmitDisabled}
-              className="h-11 rounded-xl cursor-pointer"
+              className="h-11 cursor-pointer rounded-xl"
             >
               <>
                 {isPending && <Spinner className="mr-2 h-4 w-4 animate-spin" />}

@@ -21,12 +21,7 @@ export const CreateTransactionSchema = z.object({
     .max(500, "Description must not exceed 500 characters")
     .optional(),
 
-  amount: z
-    .string()
-    .refine((value) => parseFloat(value) > 0, {
-      message: "Amount must be greater than 0",
-    })
-    .transform((value) => parseFloat(value)),
+  amount: z.number().positive("Amount must be greater than 0"),
 
   type: TransactionTypeSchema,
 
