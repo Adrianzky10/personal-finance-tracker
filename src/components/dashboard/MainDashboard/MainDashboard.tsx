@@ -10,16 +10,38 @@ import CategoryDialog from "../Category/CategoryDialog";
 import useTransaction from "@/hooks/transaction/useTransaction";
 import TransactionDialog from "./TransactionDialog";
 import { useTransactionDialogStore } from "@/stores/useTransactionDialogStore";
+import { useState } from "react";
+import { ITransactionResponseData } from "@/types/transaction";
+import { useDeleteTransaction } from "@/hooks/transaction/useDeleteTransaction";
+import DeleteDialog from "@/components/shared/DeleteDialog";
 
 export default function Transaction() {
   const { openCreateDialog: openCreateCategoryDialog } =
     useCategoryDialogStore();
-  const { openCreateDialog: openCreateTransactionDialog } =
-    useTransactionDialogStore();
+  const {
+    openCreateDialog: openCreateTransactionDialog,
+    openEditDialog: openEditTransactionDialog,
+  } = useTransactionDialogStore();
 
   const { data } = useTransaction();
 
   const transactions = data?.data ?? [];
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [transactionForDelete, setTransactionForDelete] =
+    useState<ITransactionResponseData | null>(null);
+
+  const deleteTransaction = useDeleteTransaction({
+    onSuccess: () => {
+      setOpenDeleteDialog(false);
+      setTransactionForDelete(null);
+    },
+  });
+
+  const handleDeleteTransaction = (transaction: ITransactionResponseData) => {
+    setTransactionForDelete(transaction);
+    setOpenDeleteDialog(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -35,11 +57,40 @@ export default function Transaction() {
 
       <TransactionChart data={[]} />
 
-      <TransactionTable transactions={transactions} />
+      <TransactionTable
+        transactions={transactions}
+        onEdit={openEditTransactionDialog}
+        onDelete={handleDeleteTransaction}
+      />
 
       <CategoryDialog />
 
       <TransactionDialog />
+
+      <DeleteDialog
+        open={openDeleteDialog}
+        onOpenChange={(open) => {
+          setOpenDeleteDialog(open);
+
+          if (!open) {
+            setTransactionForDelete(null);
+          }
+        }}
+        title="Delete Transaction"
+        description={
+          <>
+            Are you sure you want to delete{" "}
+            <span className="font-semibold">{transactionForDelete?.title}</span>
+            ? This action cannot be undone.
+          </>
+        }
+        loading={deleteTransaction.isPending}
+        onDelete={() => {
+          if (!transactionForDelete) return;
+
+          deleteTransaction.mutate(transactionForDelete.id);
+        }}
+      />
     </div>
   );
 }

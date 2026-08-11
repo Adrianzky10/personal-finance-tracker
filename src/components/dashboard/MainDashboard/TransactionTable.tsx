@@ -29,10 +29,14 @@ import { formatDate } from "@/utils/formatDate";
 
 interface TransactionTableProps {
   transactions: ITransactionResponseData[];
+  onEdit: (transaction: ITransactionResponseData) => void;
+  onDelete: (transaction: ITransactionResponseData) => void;
 }
 
 export default function TransactionTable({
   transactions,
+  onEdit,
+  onDelete,
 }: TransactionTableProps) {
   return (
     <div className="overflow-hidden rounded-3xl border bg-card shadow-sm">
@@ -146,6 +150,7 @@ export default function TransactionTable({
                         variant="ghost"
                         size="icon"
                         className="rounded-lg"
+                        onClick={() => onEdit(transaction)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -154,6 +159,7 @@ export default function TransactionTable({
                         variant="ghost"
                         size="icon"
                         className="rounded-lg text-destructive hover:text-destructive"
+                        onClick={() => onDelete(transaction)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

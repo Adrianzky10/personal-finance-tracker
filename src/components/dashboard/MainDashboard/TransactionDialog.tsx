@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { useCategories } from "@/hooks/category/useCategories";
 import { useCreateTransaction } from "@/hooks/transaction/useCreateTransaction";
+import { useUpdateTransaction } from "@/hooks/transaction/useUpdateTransaction";
 import { useTransactionDialogStore } from "@/stores/useTransactionDialogStore";
 import { TransactionType } from "@/types/transaction";
 import {
@@ -18,6 +19,7 @@ import {
   CreateTransactionSchema,
 } from "@/validations/transaction.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -25,16 +27,18 @@ type TransactionFormInput = z.input<typeof CreateTransactionSchema>;
 type TransactionFormOutput = z.output<typeof CreateTransactionSchema>;
 
 const TransactionDialog = () => {
-  const { open, closeDialog, mode } = useTransactionDialogStore();
+  const { open, closeDialog, mode, selectedTransaction } =
+    useTransactionDialogStore();
   const { data: categoryData } = useCategories();
 
   const isEdit = mode === "edit";
+  const transactionData = selectedTransaction;
 
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<TransactionFormInput, undefined, TransactionFormOutput>({
     resolver: zodResolver(CreateTransactionSchema),
@@ -65,11 +69,40 @@ const TransactionDialog = () => {
     },
   });
 
+  const updateTransaction = useUpdateTransaction({
+    onSuccess: () => {
+      reset();
+      closeDialog();
+    },
+  });
+
+  useEffect(() => {
+    if (isEdit && transactionData) {
+      reset({
+        title: transactionData.title,
+        description: transactionData.description,
+        amount: transactionData.amount,
+        type: transactionData.type,
+        categoryId: transactionData.categoryId,
+        date: new Date(transactionData.date),
+      });
+    }
+  }, [isEdit, transactionData, reset]);
+
   const onSubmit = (data: CreateTransactionInput) => {
+    if (isEdit && transactionData) {
+      updateTransaction.mutate({
+        id: transactionData.id,
+        data,
+      });
+
+      return;
+    }
+
     createTransaction.mutate(data as CreateTransactionInput);
   };
 
-  const isPending = createTransaction.isPending;
+  const isPending = createTransaction.isPending || updateTransaction.isPending;
 
   return (
     <CustomDialog
@@ -82,7 +115,7 @@ const TransactionDialog = () => {
       submitText={isEdit ? "Update Transaction" : "Create Transaction"}
       onSubmit={handleSubmit(onSubmit)}
       isPending={isPending}
-      isSubmitDisabled={isPending}
+      isSubmitDisabled={isPending || !isDirty}
     >
       <div className="space-y-5">
         {/* Title */}

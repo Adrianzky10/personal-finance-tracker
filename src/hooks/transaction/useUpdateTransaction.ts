@@ -12,13 +12,8 @@ export function useUpdateTransaction(props: PropTypes) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      id,
-      payload,
-    }: {
-      id: string;
-      payload: UpdateTransactionInput;
-    }) => transactionServices.updateTransaction(id, payload),
+    mutationFn: ({ id, data }: { id: string; data: UpdateTransactionInput }) =>
+      transactionServices.updateTransaction(id, data),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

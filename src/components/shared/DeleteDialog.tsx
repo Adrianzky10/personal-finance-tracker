@@ -49,10 +49,13 @@ const DeleteDialog = (props: DeleteDialogProps) => {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={loading}>{cancelText}</AlertDialogCancel>
+          <AlertDialogCancel disabled={loading} className="cursor-pointer">
+            {cancelText}
+          </AlertDialogCancel>
 
           <AlertDialogAction
             disabled={loading}
+            className="cursor-pointer"
             onClick={(e) => {
               e.preventDefault();
               onDelete();
