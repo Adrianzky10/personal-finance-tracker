@@ -23,7 +23,14 @@ export default function Transaction() {
     openEditDialog: openEditTransactionDialog,
   } = useTransactionDialogStore();
 
-  const { data } = useTransaction();
+  const {
+    data,
+    currentPage,
+    handleChangePage,
+    handleSearch,
+    currentType,
+    handleChangeType,
+  } = useTransaction();
 
   const transactions = data?.data ?? [];
 
@@ -61,6 +68,15 @@ export default function Transaction() {
         transactions={transactions}
         onEdit={openEditTransactionDialog}
         onDelete={handleDeleteTransaction}
+        // pagination
+        totalPages={data?.pagination?.totalPages ?? 0}
+        currentPage={currentPage}
+        onChangePage={handleChangePage}
+        //search
+        onChangeSearch={handleSearch}
+        // filter
+        currentType={currentType}
+        onChangeType={handleChangeType}
       />
 
       <CategoryDialog />

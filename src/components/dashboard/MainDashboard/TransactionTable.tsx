@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -23,20 +22,37 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { ITransactionResponseData } from "@/types/transaction";
+import { ITransactionResponseData, TransactionType } from "@/types/transaction";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDate } from "@/utils/formatDate";
+import { ChangeEvent } from "react";
+import { cn } from "@/lib/utils";
 
 interface TransactionTableProps {
   transactions: ITransactionResponseData[];
   onEdit: (transaction: ITransactionResponseData) => void;
   onDelete: (transaction: ITransactionResponseData) => void;
+  // pagination
+  totalPages: number;
+  currentPage: number;
+  onChangePage: (page: number) => void;
+  //search
+  onChangeSearch: (e: ChangeEvent<HTMLInputElement>) => void;
+  // filter
+  currentType?: TransactionType;
+  onChangeType: (type?: TransactionType) => void;
 }
 
 export default function TransactionTable({
   transactions,
   onEdit,
   onDelete,
+  totalPages,
+  currentPage,
+  onChangePage,
+  onChangeSearch,
+  currentType,
+  onChangeType,
 }: TransactionTableProps) {
   return (
     <div className="overflow-hidden rounded-3xl border bg-card shadow-sm">
@@ -50,27 +66,62 @@ export default function TransactionTable({
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row items-center">
           {/* Search */}
           <div className="relative w-full sm:w-64">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
-            <Input placeholder="Search title..." className="pl-9 rounded-xl" />
+            <Input
+              type="search"
+              placeholder="Search title..."
+              className="pl-9 rounded-xl"
+              onChange={onChangeSearch}
+            />
           </div>
 
           {/* Filter */}
           <div className="flex rounded-xl bg-muted p-1 justify-center md:justify-start">
-            <Button size="sm" variant="default" className="rounded-lg">
-              All
-            </Button>
+            {/* Opsi: All */}
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="transaction_type"
+                className="peer sr-only" // Menyembunyikan bulat radio aslinya
+                checked={!currentType}
+                onChange={() => onChangeType(undefined)}
+              />
+              <div className="rounded-lg px-4 py-1.5 text-sm font-medium transition-all text-muted-foreground hover:bg-muted-foreground/20 peer-checked:bg-background peer-checked:text-primary peer-checked:shadow-sm">
+                All
+              </div>
+            </label>
 
-            <Button size="sm" variant="ghost" className="rounded-lg">
-              Income
-            </Button>
+            {/* Opsi: Income */}
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="transaction_type"
+                className="peer sr-only"
+                checked={currentType === TransactionType.INCOME}
+                onChange={() => onChangeType(TransactionType.INCOME)}
+              />
+              <div className="rounded-lg px-4 py-1.5 text-sm font-medium transition-all text-muted-foreground hover:bg-muted-foreground/20 peer-checked:bg-background peer-checked:text-primary peer-checked:shadow-sm">
+                Income
+              </div>
+            </label>
 
-            <Button size="sm" variant="ghost" className="rounded-lg">
-              Expense
-            </Button>
+            {/* Opsi: Expense */}
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="transaction_type"
+                className="peer sr-only"
+                checked={currentType === TransactionType.EXPENSE}
+                onChange={() => onChangeType(TransactionType.EXPENSE)}
+              />
+              <div className="rounded-lg px-4 py-1.5 text-sm font-medium transition-all text-muted-foreground hover:bg-muted-foreground/20 peer-checked:bg-background peer-checked:text-primary peer-checked:shadow-sm">
+                Expense
+              </div>
+            </label>
           </div>
         </div>
       </div>
@@ -89,85 +140,91 @@ export default function TransactionTable({
           </TableHeader>
 
           <TableBody>
-            {transactions.map((transaction) => {
-              const isIncome = transaction.type === "income";
+            {transactions.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="h-32 text-center text-sm text-muted-foreground"
+                >
+                  No transactions found.
+                </TableCell>
+              </TableRow>
+            ) : (
+              transactions.map((transaction) => {
+                const isIncome = transaction.type === "income";
 
-              return (
-                <TableRow key={transaction.id}>
-                  {/* Transaction */}
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                          isIncome
-                            ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
-                            : "bg-rose-100 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400"
-                        }`}
-                      >
-                        {isIncome ? <span>↓</span> : <span>↑</span>}
+                return (
+                  <TableRow key={transaction.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                            isIncome
+                              ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+                              : "bg-rose-100 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400"
+                          }`}
+                        >
+                          {isIncome ? <span>↓</span> : <span>↑</span>}
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="font-medium">{transaction.title}</p>
+
+                          {transaction.description && (
+                            <p className="truncate text-xs text-muted-foreground">
+                              {transaction.description}
+                            </p>
+                          )}
+                        </div>
                       </div>
+                    </TableCell>
 
-                      <div className="min-w-0">
-                        <p className="font-medium">{transaction.title}</p>
+                    <TableCell>
+                      <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
+                        {transaction.category.name}
+                      </span>
+                    </TableCell>
 
-                        {transaction.description && (
-                          <p className="truncate text-xs text-muted-foreground">
-                            {transaction.description}
-                          </p>
-                        )}
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(transaction.date)}
+                    </TableCell>
+
+                    <TableCell
+                      className={`text-right font-semibold tabular-nums ${
+                        isIncome
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-foreground"
+                      }`}
+                    >
+                      {isIncome ? "+" : "-"}
+                      {formatCurrency(transaction.amount)}
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex justify-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-lg cursor-pointer"
+                          onClick={() => onEdit(transaction)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-lg text-destructive hover:text-destructive cursor-pointer"
+                          onClick={() => onDelete(transaction)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
-                    </div>
-                  </TableCell>
-
-                  {/* Category */}
-                  <TableCell>
-                    <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
-                      {transaction.category.name}
-                    </span>
-                  </TableCell>
-
-                  {/* Date */}
-                  <TableCell className="text-muted-foreground">
-                    {formatDate(transaction.date)}
-                  </TableCell>
-
-                  {/* Amount */}
-                  <TableCell
-                    className={`text-right font-semibold tabular-nums ${
-                      isIncome
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-foreground"
-                    }`}
-                  >
-                    {isIncome ? "+" : "-"}
-                    {formatCurrency(transaction.amount)}
-                  </TableCell>
-
-                  {/* Actions */}
-                  <TableCell>
-                    <div className="flex justify-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-lg"
-                        onClick={() => onEdit(transaction)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-lg text-destructive hover:text-destructive"
-                        onClick={() => onDelete(transaction)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
           </TableBody>
         </Table>
       </div>
@@ -178,31 +235,65 @@ export default function TransactionTable({
           Showing {transactions.length} transactions
         </p>
 
-        <Pagination className="mx-0 w-auto justify-end">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
+        {totalPages > 1 && (
+          <Pagination className="mx-0 w-auto justify-end">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
 
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                1
-              </PaginationLink>
-            </PaginationItem>
+                    if (currentPage > 1) {
+                      onChangePage(currentPage - 1);
+                    }
+                  }}
+                  className={
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }
+                />
+              </PaginationItem>
 
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
-            </PaginationItem>
+              {Array.from({ length: totalPages }, (_, index) => {
+                const page = index + 1;
 
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      className={cn({
+                        "pointer-events-none opacity-50": page === currentPage,
+                      })}
+                      isActive={page === currentPage}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onChangePage(page);
+                      }}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
 
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              <PaginationItem>
+                <PaginationNext
+                  onClick={(e) => {
+                    e.preventDefault();
+
+                    if (currentPage < totalPages) {
+                      onChangePage(currentPage + 1);
+                    }
+                  }}
+                  className={
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
       </div>
     </div>
   );
