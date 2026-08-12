@@ -13,6 +13,7 @@ import {
   UpdateCategorySchema,
 } from "@/validations/category.validation";
 import { ICategory } from "@/types/category";
+import Transaction from "@/models/Transaction";
 
 export async function createCategory(data: CreateCategoryInput) {
   await connectDB();
@@ -175,7 +176,6 @@ export async function updateCategory(
     updatedAt: category.updatedAt,
   };
 }
-
 export async function deleteCategory(params: CategoryIdInput) {
   await connectDB();
   const user = await requireAuth();
@@ -189,6 +189,18 @@ export async function deleteCategory(params: CategoryIdInput) {
 
   if (!category) {
     throw new AppError("Category not found", 404);
+  }
+
+  const transactionExists = await Transaction.exists({
+    categoryId: category._id,
+    userId: user._id,
+  });
+
+  if (transactionExists) {
+    throw new AppError(
+      "Category cannot be deleted because it is being used by transactions",
+      409,
+    );
   }
 
   await category.deleteOne();
