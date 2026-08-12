@@ -97,6 +97,21 @@ export function errorResponse(
     );
   }
 
+  if (error instanceof mongoose.Error.CastError) {
+    return NextResponse.json(
+      {
+        meta: {
+          success: false,
+          statusCode: 400,
+          message: "Invalid ID format",
+        },
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
   if (error instanceof mongoose.Error) {
     return NextResponse.json(
       {

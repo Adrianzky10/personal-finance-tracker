@@ -207,9 +207,17 @@ export default function Navbar() {
                   <Button
                     variant="ghost"
                     className="justify-start text-destructive py-8"
+                    onClick={() => handleLogout.mutate()}
+                    disabled={handleLogout.isPending}
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
+                    {handleLogout.isPending ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </>
+                    )}
                   </Button>
                 </>
               ) : (

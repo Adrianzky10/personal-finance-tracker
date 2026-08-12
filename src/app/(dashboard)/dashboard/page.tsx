@@ -1,7 +1,12 @@
-import Category from "@/components/dashboard/Category";
+import MainDashboard from "@/components/dashboard/MainDashboard/MainDashboard";
+import { Suspense } from "react";
 
 const DashboardPage = () => {
-  return <h1>Dashboard Page</h1>;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MainDashboard />
+    </Suspense>
+  );
 };
 
 export default DashboardPage;

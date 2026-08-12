@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import WelcomeBar from "../WelcomeBar";
 import CategoryCard from "./CategoryCard";
 import { useCategories } from "@/hooks/category/useCategories";
 import CategoryDialog from "./CategoryDialog";
@@ -8,14 +7,14 @@ import CategorySkeleton from "./CategorySkeleton";
 import type { Category } from "@/types/category";
 import { useDeleteCategory } from "@/hooks/category/useDeleteCategory";
 import DeleteDialog from "@/components/shared/DeleteDialog";
+import WelcomeBar from "@/components/shared/WelcomeBar";
+import { useCategoryDialogStore } from "@/stores/useCategoryDialogStore";
 
 const Category = () => {
-  const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null,
-  );
+  const { openCreateDialog, openEditDialog } = useCategoryDialogStore();
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Category | null>(null);
 
   const { data, isLoading } = useCategories();
   const incomeCategories =
@@ -24,20 +23,15 @@ const Category = () => {
   const expenseCategories =
     data?.data.filter((item) => item.type === "expense") ?? [];
 
-  const handleEditCategory = (category: Category) => {
-    setSelectedCategory(category);
-    setOpenCategoryDialog(true);
-  };
-
   const deleteCategory = useDeleteCategory({
     onSuccess: () => {
       setOpenDeleteDialog(false);
-      setSelectedCategory(null);
+      setDeleteTarget(null);
     },
   });
 
   const handleDeleteCategory = (category: Category) => {
-    setSelectedCategory(category);
+    setDeleteTarget(category);
     setOpenDeleteDialog(true);
   };
 
@@ -47,10 +41,7 @@ const Category = () => {
         type="categories"
         title="Manage Categories"
         description="Organize your expenses and income sources into custom categories."
-        onCreateCategory={() => {
-          setSelectedCategory(null);
-          setOpenCategoryDialog(true);
-        }}
+        onCreateCategory={openCreateDialog}
       />
 
       {isLoading ? (
@@ -59,7 +50,7 @@ const Category = () => {
         <>
           <div className="grid gap-6 lg:grid-cols-2">
             <CategoryCard
-              onEdit={handleEditCategory}
+              onEdit={openEditDialog}
               color="success"
               title="Income Categories"
               categories={incomeCategories}
@@ -67,7 +58,7 @@ const Category = () => {
             />
 
             <CategoryCard
-              onEdit={handleEditCategory}
+              onEdit={openEditDialog}
               color="danger"
               title="Expense Categories"
               categories={expenseCategories}
@@ -77,18 +68,7 @@ const Category = () => {
         </>
       )}
 
-      <CategoryDialog
-        open={openCategoryDialog}
-        onOpenChange={(value) => {
-          setOpenCategoryDialog(value);
-
-          if (!value) {
-            setSelectedCategory(null);
-          }
-        }}
-        mode={selectedCategory ? "edit" : "create"}
-        categoryData={selectedCategory ?? undefined}
-      />
+      <CategoryDialog />
 
       <DeleteDialog
         open={openDeleteDialog}
@@ -96,22 +76,22 @@ const Category = () => {
           setOpenDeleteDialog(open);
 
           if (!open) {
-            setSelectedCategory(null);
+            setDeleteTarget(null);
           }
         }}
         title="Delete Category"
         description={
           <>
             Are you sure you want to delete{" "}
-            <span className="font-semibold">{selectedCategory?.name}</span>?
+            <span className="font-semibold">{deleteTarget?.name}</span>?
             This action cannot be undone.
           </>
         }
         loading={deleteCategory.isPending}
         onDelete={() => {
-          if (!selectedCategory) return;
+          if (!deleteTarget) return;
 
-          deleteCategory.mutate(selectedCategory.id);
+          deleteCategory.mutate(deleteTarget.id);
         }}
       />
     </main>

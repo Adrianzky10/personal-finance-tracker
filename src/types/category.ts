@@ -1,15 +1,14 @@
 import { Document, Types } from "mongoose";
 
-export enum CategoryType {
-  EXPENSE = "expense",
-  INCOME = "income",
-}
+// Re-use TransactionType to avoid duplicate enums with the same values.
+// Aliased as CategoryType for backward compatibility.
+import { TransactionType } from "./transaction";
 
 // for backend
 export interface ICategory extends Document {
   userId: Types.ObjectId;
   name: string;
-  type: CategoryType;
+  type: TransactionType;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,7 +17,7 @@ export interface ICategory extends Document {
 export interface Category {
   id: string;
   name: string;
-  type: CategoryType;
+  type: TransactionType;
   createdAt: string;
   updatedAt: string;
 }
