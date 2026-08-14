@@ -4,6 +4,7 @@ import { Pencil, Search, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Pagination,
   PaginationContent,
@@ -29,6 +30,7 @@ import { ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
 
 interface TransactionTableProps {
+  isLoading?: boolean;
   transactions: ITransactionResponseData[];
   onEdit: (transaction: ITransactionResponseData) => void;
   onDelete: (transaction: ITransactionResponseData) => void;
@@ -44,6 +46,7 @@ interface TransactionTableProps {
 }
 
 export default function TransactionTable({
+  isLoading,
   transactions,
   onEdit,
   onDelete,
@@ -140,7 +143,36 @@ export default function TransactionTable({
           </TableHeader>
 
           <TableBody>
-            {transactions.length === 0 ? (
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, index) => (
+                <TableRow key={`skeleton-${index}`}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-10 w-10 shrink-0 rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-3.75" />
+                        <Skeleton className="h-3 w-25" />
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex justify-center gap-1">
+                      <Skeleton className="h-8 w-8 rounded-lg" />
+                      <Skeleton className="h-8 w-8 rounded-lg" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : transactions.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={5}

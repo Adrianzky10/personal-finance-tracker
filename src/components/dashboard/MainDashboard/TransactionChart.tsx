@@ -2,6 +2,13 @@
 
 import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import {
   Card,
@@ -29,6 +36,8 @@ export interface TransactionChartData {
 
 interface TransactionChartProps {
   data: TransactionChartData[];
+  currentMonths: number;
+  onChangeMonths: (months: number) => void;
 }
 
 const chartConfig = {
@@ -50,15 +59,33 @@ const formatCurrency = (value: number) => {
   }).format(value);
 };
 
-export default function TransactionChart({ data }: TransactionChartProps) {
+export default function TransactionChart({
+  data,
+  currentMonths,
+  onChangeMonths,
+}: TransactionChartProps) {
   return (
     <Card className="rounded-3xl">
-      <CardHeader>
-        <CardTitle>Income & Expense Overview</CardTitle>
-
-        <CardDescription>
-          Your income and expenses over the last 6 months
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <div>
+          <CardTitle>Income & Expense Overview</CardTitle>
+          <CardDescription>
+            Your income and expenses over the last {currentMonths} months
+          </CardDescription>
+        </div>
+        <Select
+          value={String(currentMonths)}
+          onValueChange={(val) => onChangeMonths(Number(val))}
+        >
+          <SelectTrigger className="w-37.5 rounded-xl">
+            <SelectValue placeholder="Select period" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="3">Last 3 Months</SelectItem>
+            <SelectItem value="6">Last 6 Months</SelectItem>
+            <SelectItem value="12">Last 12 Months</SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
 
       <CardContent>

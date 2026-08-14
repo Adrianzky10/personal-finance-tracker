@@ -165,7 +165,6 @@ const TransactionDialog = () => {
           <Input
             type="number"
             min="0"
-            step={1000}
             className="h-12 rounded-xl"
             placeholder="Enter amount"
             {...register("amount", { valueAsNumber: true })}
