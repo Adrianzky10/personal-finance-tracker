@@ -64,19 +64,13 @@ export async function register(data: RegisterInput): Promise<RegisterResponse> {
     activationLink,
   });
 
-  try {
-    await sendEmail({
-      to: email,
-      subject: "Activate Your Account",
-      html,
-    });
-  } catch {
-    throw new AppError(
-      "Failed to send activation email. Please try again.",
-      500,
-      "EMAIL_SEND_FAILED",
-    );
-  }
+  sendEmail({
+    to: email,
+    subject: "Activate Your Account",
+    html,
+  }).catch((error) => {
+    console.error("Failed to send activation email:", error);
+  });
 
   return {
     id: user._id.toString(),
@@ -152,11 +146,19 @@ export async function resendActivationEmail(
     activationLink,
   });
 
-  await sendEmail({
-    to: user.email,
-    subject: "Activate Your Email",
-    html,
-  });
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: "Activate Your Email",
+      html,
+    });
+  } catch {
+    throw new AppError(
+      "Failed to resend activation email. Please try again.",
+      500,
+      "EMAIL_SEND_FAILED",
+    );
+  }
   return {
     email: user.email,
   };
