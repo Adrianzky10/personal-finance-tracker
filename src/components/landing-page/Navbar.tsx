@@ -43,16 +43,16 @@ export default function Navbar() {
       href: "#about",
     },
     {
+      title: "Services",
+      href: "#services",
+    },
+    {
       title: "Features",
       href: "#features",
     },
     {
       title: "Testimonials",
       href: "#testimonials",
-    },
-    {
-      title: "Pricing",
-      href: "#pricing",
     },
   ];
 
