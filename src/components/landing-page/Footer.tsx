@@ -73,15 +73,6 @@ export default function Footer() {
                   GitHub
                 </Link>
               </li>
-
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Documentation
-                </Link>
-              </li>
             </ul>
           </div>
         </div>
