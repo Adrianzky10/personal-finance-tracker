@@ -4,6 +4,7 @@ import WelcomeBar from "@/components/shared/WelcomeBar";
 import TransactionChart from "./TransactionChart";
 import TransactionSummary from "./TransactionSummary";
 import TransactionTable from "./TransactionTable";
+import DashboardSkeleton from "./DashboardSkeleton";
 
 import { useCategoryDialogStore } from "@/stores/useCategoryDialogStore";
 import CategoryDialog from "../Category/CategoryDialog";
@@ -14,8 +15,16 @@ import { useState } from "react";
 import { ITransactionResponseData } from "@/types/transaction";
 import { useDeleteTransaction } from "@/hooks/transaction/useDeleteTransaction";
 import DeleteDialog from "@/components/shared/DeleteDialog";
+import { useDashboard } from "@/hooks/dashboard/useDashboard";
 
 export default function Transaction() {
+  const { 
+    data: dashboardData, 
+    isLoading: isLoadingDashboard,
+    currentMonths,
+    handleChangeMonths,
+  } = useDashboard();
+  console.log(dashboardData);
   const { openCreateDialog: openCreateCategoryDialog } =
     useCategoryDialogStore();
   const {
@@ -25,6 +34,7 @@ export default function Transaction() {
 
   const {
     data,
+    isLoading: isLoadingTransaction,
     currentPage,
     handleChangePage,
     handleSearch,
@@ -50,6 +60,10 @@ export default function Transaction() {
     setOpenDeleteDialog(true);
   };
 
+  if (isLoadingDashboard) {
+    return <DashboardSkeleton />;
+  }
+
   return (
     <div className="space-y-6">
       <WelcomeBar
@@ -60,11 +74,20 @@ export default function Transaction() {
         onCreateTransaction={openCreateTransactionDialog}
       />
 
-      <TransactionSummary totalIncome={0} totalExpense={0} balance={0} />
+      <TransactionSummary
+        totalIncome={dashboardData?.data?.summary.totalIncome ?? 0}
+        totalExpense={dashboardData?.data?.summary.totalExpense ?? 0}
+        balance={dashboardData?.data?.summary.balance ?? 0}
+      />
 
-      <TransactionChart data={[]} />
+      <TransactionChart 
+        data={dashboardData?.data?.chart ?? []} 
+        currentMonths={currentMonths}
+        onChangeMonths={handleChangeMonths}
+      />
 
       <TransactionTable
+        isLoading={isLoadingTransaction}
         transactions={transactions}
         onEdit={openEditTransactionDialog}
         onDelete={handleDeleteTransaction}

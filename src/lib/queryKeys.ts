@@ -5,4 +5,6 @@ export const queryKeys = {
     params === undefined
       ? (["transactions"] as const)
       : (["transactions", params] as const),
+
+  dashboard: (months?: number) => ["dashboard", months] as const,
 };

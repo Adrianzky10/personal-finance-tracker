@@ -55,6 +55,8 @@ TransactionSchema.index({
   date: -1,
 });
 
+TransactionSchema.index({ userId: 1, type: 1, date: -1 });
+
 const Transaction: Model<ITransaction> =
   mongoose.models.Transaction ||
   mongoose.model<ITransaction>("Transaction", TransactionSchema);
