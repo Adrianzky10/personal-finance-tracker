@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { useTransactions } from "./useTransactions";
@@ -31,28 +31,6 @@ const useTransaction = () => {
     typeParam === TransactionType.EXPENSE
       ? typeParam
       : undefined;
-
-  useEffect(() => {
-    const current = new URLSearchParams(searchParams.toString());
-
-    let shouldUpdate = false;
-
-    if (!current.has("page")) {
-      current.set("page", String(PAGE_DEFAULT));
-      shouldUpdate = true;
-    }
-
-    if (!current.has("limit")) {
-      current.set("limit", String(LIMIT_DEFAULT));
-      shouldUpdate = true;
-    }
-
-    if (shouldUpdate) {
-      router.replace(`${pathname}?${current.toString()}`, {
-        scroll: false,
-      });
-    }
-  }, [searchParams, pathname, router]);
 
   const updateURL = (params: Record<string, string | number | undefined>) => {
     const current = new URLSearchParams(searchParams.toString());
