@@ -43,18 +43,19 @@ interface TransactionChartProps {
 const chartConfig = {
   income: {
     label: "Income",
-    color: "var(--chart-2)",
+    color: "hsl(199, 89%, 70%)",
   },
   expense: {
     label: "Expense",
-    color: "var(--chart-1)",
+    color: "hsl(217, 75%, 55%)",
   },
 } satisfies ChartConfig;
 
 const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("id-ID", {
     style: "currency",
-    currency: "USD",
+    currency: "IDR",
+    minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value);
 };
@@ -112,7 +113,11 @@ export default function TransactionChart({
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => `Rp.${value}`}
+              tickFormatter={(value) => {
+                if (value >= 1_000_000) return `${value / 1_000_000}jt`;
+                if (value >= 1_000) return `${value / 1_000}rb`;
+                return String(value);
+              }}
             />
 
             <ChartTooltip
