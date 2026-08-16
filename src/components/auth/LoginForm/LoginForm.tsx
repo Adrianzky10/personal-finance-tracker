@@ -1,6 +1,7 @@
 "use client";
 
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,11 +58,11 @@ export function LoginForm({ callbackUrl }: PropTypes) {
           </label>
 
           <Button
-            type="button"
+            asChild
             variant="link"
             className="h-auto p-0 text-xs text-primary"
           >
-            Forgot Password?
+            <Link href="/forgot-password">Forgot Password?</Link>
           </Button>
         </div>
 

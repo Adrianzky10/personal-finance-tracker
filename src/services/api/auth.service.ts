@@ -5,6 +5,8 @@ import {
   RegisterInput,
   ResendActivationEmailInput,
   VerifyEmailInput,
+  ForgotPasswordInput,
+  ResetPasswordInput,
 } from "@/validations/auth.validation";
 
 const authServices = {
@@ -19,6 +21,12 @@ const authServices = {
 
   login: (payload: LoginInput) =>
     apiClient.post(`${apiEndpoint.AUTH}/login`, payload),
+
+  forgotPassword: (payload: ForgotPasswordInput) =>
+    apiClient.post(`${apiEndpoint.AUTH}/forgot-password`, payload),
+
+  resetPassword: (payload: ResetPasswordInput) =>
+    apiClient.post(`${apiEndpoint.AUTH}/reset-password`, payload),
 
   getMe: () => apiClient.get(`${apiEndpoint.AUTH}/me`),
 
