@@ -39,14 +39,20 @@ const CategoryCard = (props: PropTypes) => {
       </div>
 
       <div className="space-y-3 p-6">
-        {categories.map((category) => (
-          <CategoryItem
-            key={category.id}
-            category={category}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        ))}
+        {categories && categories.length > 0 ? (
+          categories.map((category) => (
+            <CategoryItem
+              key={category.id}
+              category={category}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
+          ))
+        ) : (
+          <div className="text-center text-muted-foreground">
+            categories not found
+          </div>
+        )}
       </div>
     </div>
   );
