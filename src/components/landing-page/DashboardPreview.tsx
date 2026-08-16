@@ -1,6 +1,14 @@
+"use client";
+
+import { useTheme } from "next-themes";
 import Image from "next/image";
 
 export default function DashboardPreview() {
+  const { theme } = useTheme();
+  const dashboardImage =
+    theme === "light"
+      ? "/images/dashboard-prv-light.png"
+      : "/images/dashboard-prv-dark.png";
   return (
     <section className="relative mx-auto mt-20 w-full max-w-7xl px-6">
       {/* Background Glow */}
@@ -21,7 +29,7 @@ export default function DashboardPreview() {
         {/* Screenshot */}
         <div className="relative">
           <Image
-            src="/images/dashboard-preview.png"
+            src={dashboardImage}
             alt="FinTracker Dashboard"
             width={1600}
             height={900}

@@ -18,13 +18,12 @@ import DeleteDialog from "@/components/shared/DeleteDialog";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
 
 export default function Transaction() {
-  const { 
-    data: dashboardData, 
+  const {
+    data: dashboardData,
     isLoading: isLoadingDashboard,
     currentMonths,
     handleChangeMonths,
   } = useDashboard();
-  console.log(dashboardData);
   const { openCreateDialog: openCreateCategoryDialog } =
     useCategoryDialogStore();
   const {
@@ -80,8 +79,8 @@ export default function Transaction() {
         balance={dashboardData?.data?.summary.balance ?? 0}
       />
 
-      <TransactionChart 
-        data={dashboardData?.data?.chart ?? []} 
+      <TransactionChart
+        data={dashboardData?.data?.chart ?? []}
         currentMonths={currentMonths}
         onChangeMonths={handleChangeMonths}
       />
