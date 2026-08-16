@@ -83,8 +83,8 @@ const Category = () => {
         description={
           <>
             Are you sure you want to delete{" "}
-            <span className="font-semibold">{deleteTarget?.name}</span>?
-            This action cannot be undone.
+            <span className="font-semibold">{deleteTarget?.name}</span>? This
+            action cannot be undone.
           </>
         }
         loading={deleteCategory.isPending}
