@@ -4,15 +4,20 @@ import { APP_URL } from "@/lib/env";
 import { generateToken, verifyToken } from "@/lib/jwt";
 import { sendEmail } from "@/lib/mail/mailer";
 import { createActivationEmailTemplate } from "@/lib/mail/templates/activation-email";
+import { createResetPasswordEmailTemplate } from "@/lib/mail/templates/reset-password-email";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import {
+  ForgotPasswordInput,
+  forgotPasswordSchema,
   LoginInput,
   loginSchema,
   RegisterInput,
   registerSchema,
   ResendActivationEmailInput,
   resendActivationEmailSchema,
+  ResetPasswordInput,
+  resetPasswordSchema,
   VerifyEmailInput,
   verifyEmailSchema,
 } from "@/validations/auth.validation";
@@ -215,4 +220,57 @@ export async function logout() {
   return {
     message: "Logout successfully",
   };
+}
+
+export async function forgotPassword(data: ForgotPasswordInput) {
+  await connectDB();
+  const { email } = forgotPasswordSchema.parse(data);
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    // Return success to avoid email enumeration
+    return { message: "If an account with that email exists, we sent a password reset link." };
+  }
+
+  const resetPasswordToken = generateToken({ email }, "1h");
+  user.resetPasswordToken = resetPasswordToken;
+  await user.save();
+
+  const resetLink = `${APP_URL}/reset-password?token=${resetPasswordToken}`;
+  const html = createResetPasswordEmailTemplate({ name: user.name, resetLink });
+
+  sendEmail({
+    to: email,
+    subject: "Reset Your Password",
+    html,
+  }).catch((error) => {
+    console.error("Failed to send reset password email:", error);
+  });
+
+  return { message: "If an account with that email exists, we sent a password reset link." };
+}
+
+export async function resetPassword(data: ResetPasswordInput) {
+  await connectDB();
+  const { token, password } = resetPasswordSchema.parse(data);
+
+  const payload = verifyToken<JwtPayload>(token);
+  const { email } = payload;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new AppError("Invalid or expired reset token", 400);
+  }
+
+  if (user.resetPasswordToken !== token) {
+    throw new AppError("Invalid or expired reset token", 400);
+  }
+
+  const hashedPassword = await hashPassword(password);
+  user.password = hashedPassword;
+  user.resetPasswordToken = null;
+  await user.save();
+
+  return { message: "Password reset successfully. You can now login with your new password." };
 }

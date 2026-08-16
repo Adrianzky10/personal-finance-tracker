@@ -6,6 +6,7 @@ export interface IUser extends Document {
   password: string;
   isVerified: boolean;
   activationToken: string | null;
+  resetPasswordToken: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

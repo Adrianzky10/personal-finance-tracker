@@ -10,6 +10,8 @@ export async function proxy(request: NextRequest) {
     "/register",
     "/verify-email",
     "/check-email",
+    "/forgot-password",
+    "/reset-password",
   ];
   const isMatchUnauthenticated = unauthenticatedRoutes.some((route) =>
     pathname.startsWith(route),
@@ -42,6 +44,8 @@ export const config = {
     "/categories/:path*",
     "/verify-email/:path*",
     "/check-email/:path*",
+    "/forgot-password/:path*",
+    "/reset-password/:path*",
     "/login",
     "/register",
   ],
